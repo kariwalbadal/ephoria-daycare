@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ephoria — Caregiver applicants, texted back in 60 seconds</title>
+<meta name="description" content="Ephoria texts every caregiver applicant within 60 seconds, screens them by SMS, and books interviews straight into your calendar.">
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white text-slate-900 antialiased">
+
+<!-- Above the fold -->
+<header class="max-w-3xl mx-auto px-6 pt-20 pb-16">
+  <p class="text-sm font-semibold tracking-wide text-teal-700 uppercase mb-6">Ephoria · for home care agencies</p>
+  <h1 class="text-4xl sm:text-5xl font-bold leading-tight mb-6">
+    Every caregiver applicant, texted back in 60 seconds.
+  </h1>
+  <p class="text-xl text-slate-600 mb-8">
+    Most applicants apply to five agencies and take the first one that answers.
+    Ephoria answers first — it screens your applicants by text and books the good ones
+    into your calendar before they take another job.
+  </p>
+  <a href="mailto:kariwalbadal@gmail.com?subject=Ephoria%2014-day%20pilot"
+     class="inline-block bg-teal-700 hover:bg-teal-800 text-white font-semibold px-8 py-4 rounded-lg text-lg">
+    Ask about the 14-day pilot
+  </a>
+</header>
+
+<!-- The flow -->
+<section class="bg-slate-50 py-16">
+  <div class="max-w-3xl mx-auto px-6">
+    <h2 class="text-2xl font-bold mb-8">How it works</h2>
+    <ol class="space-y-6 text-lg">
+      <li class="flex gap-4"><span class="font-bold text-teal-700">1.</span>
+        A caregiver applies — from Indeed, your website, or anywhere else.</li>
+      <li class="flex gap-4"><span class="font-bold text-teal-700">2.</span>
+        They get a text within 60 seconds and answer a few screening questions by SMS.</li>
+      <li class="flex gap-4"><span class="font-bold text-teal-700">3.</span>
+        Qualified applicants pick an interview slot that lands straight on your calendar.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- The pilot offer -->
+<section class="py-16">
+  <div class="max-w-3xl mx-auto px-6">
+    <h2 class="text-2xl font-bold mb-4">The pilot</h2>
+    <p class="text-lg text-slate-600 mb-4">
+      <span class="font-semibold text-slate-900">$500 for 14 days</span> on your real
+      applicant flow. You watch every conversation. If it doesn't book interviews,
+      walk away. If it does, it's $2,500/month and you never lose another applicant
+      to silence.
+    </p>
+    <a href="mailto:kariwalbadal@gmail.com?subject=Ephoria%2014-day%20pilot"
+       class="inline-block border-2 border-teal-700 text-teal-700 hover:bg-teal-50 font-semibold px-8 py-3 rounded-lg">
+      Email to start
+    </a>
+  </div>
+</section>
+
+<!-- Demo intake form -->
+<section class="bg-slate-50 py-16" id="apply">
+  <div class="max-w-3xl mx-auto px-6">
+    <h2 class="text-2xl font-bold mb-2">See it from the applicant's side</h2>
+    <p class="text-slate-600 mb-8">Fill this in as if you were applying for a caregiver
+      job, and watch what your applicants would experience.</p>
+    <form id="intake" class="space-y-4 max-w-md">
+      <input required name="name" placeholder="Your name"
+             class="w-full border border-slate-300 rounded-lg px-4 py-3">
+      <input required name="phone" type="tel" placeholder="Mobile number"
+             class="w-full border border-slate-300 rounded-lg px-4 py-3">
+      <button type="submit"
+              class="w-full bg-teal-700 hover:bg-teal-800 text-white font-semibold px-6 py-3 rounded-lg">
+        Apply (demo)
+      </button>
+      <p class="text-xs text-slate-500">By submitting, you agree to receive text messages
+        about this application. Reply STOP at any time to opt out. Message and data rates
+        may apply.</p>
+      <p id="form-note" class="text-sm text-slate-600 hidden"></p>
+    </form>
+  </div>
+</section>
+
+<footer class="py-10 border-t border-slate-200">
+  <div class="max-w-3xl mx-auto px-6 text-sm text-slate-500">
+    Ephoria · automated hiring for home care agencies ·
+    <a class="underline" href="mailto:kariwalbadal@gmail.com">kariwalbadal@gmail.com</a>
+  </div>
+</footer>
+
+<script>
+// STEP 5 webhook. Empty until the screening service is deployed (STEP 7).
+const WEBHOOK_URL = "";
+
+document.getElementById("intake").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const note = document.getElementById("form-note");
+  note.classList.remove("hidden");
+  if (!WEBHOOK_URL) {
+    note.textContent = "The live demo line isn't connected yet — email us and we'll show you directly.";
+    return;
+  }
+  const data = Object.fromEntries(new FormData(e.target));
+  try {
+    const r = await fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({...data, source: "form"}),
+    });
+    note.textContent = r.ok
+      ? "Done — check your phone. A text is on its way."
+      : "Something went wrong. Email us instead.";
+  } catch {
+    note.textContent = "Something went wrong. Email us instead.";
+  }
+});
+</script>
+
+</body>
+</html>
