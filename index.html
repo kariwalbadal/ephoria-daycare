@@ -350,6 +350,8 @@ const io = new IntersectionObserver(es=>es.forEach(e=>{
   if(e.isIntersecting){ e.target.classList.add("on"); io.unobserve(e.target); }
 }),{threshold:.15});
 document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+/* failsafe: if observers never fire (hidden tab, odd embedder), show everything */
+setTimeout(()=>document.querySelectorAll(".reveal").forEach(el=>el.classList.add("on")), 3000);
 
 /* ---- intake form: STEP 5 webhook (empty until service deploys) ---- */
 const WEBHOOK_URL = "";
