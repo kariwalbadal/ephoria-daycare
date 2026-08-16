@@ -47,7 +47,7 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 
 /* hero */
 .hero{padding:122px 0 56px;position:relative}  /* 66px fixed nav + 56px = same visual gap as every section */
-.hero .fcards{margin:26px 0 0}
+.hero .fcards{margin:0}
 .stage{margin:0 auto;position:relative}
 h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(40px,5.2vw,66px);line-height:1.02;letter-spacing:-.025em;margin:0 0 22px}
 h1 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);color:inherit;padding:0 2px}
@@ -65,7 +65,7 @@ h1 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);col
 .avatar{width:34px;height:34px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:14px}
 .phone-top small{display:block;color:var(--mute);font-size:11px}
 .phone-top b{font-size:13px;font-weight:700}
-.thread{flex:1;padding:16px 13px;display:flex;flex-direction:column;gap:9px;overflow:hidden;justify-content:flex-end}
+.thread{flex:1;padding:16px 13px;display:flex;flex-direction:column;gap:9px;overflow:hidden;justify-content:flex-end;overflow-anchor:none}
 .msg{max-width:84%;padding:9px 13px;border-radius:15px;font-size:13.5px;line-height:1.45;opacity:0;transform:translateY(10px);transition:opacity .4s ease,transform .4s ease}
 .msg.show{opacity:1;transform:none}
 .msg.out{align-self:flex-start;background:#fff;color:var(--ink);border:1px solid var(--line);border-bottom-left-radius:4px}
@@ -98,8 +98,12 @@ h1 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);col
 .money b i{font-style:normal;color:var(--yellow)}
 .money p{font-size:14px;color:rgba(255,255,255,.66);margin-top:8px;max-width:230px}
 
-/* sections: uniform rhythm, strict color alternation (cream / white / sky / navy) */
+/* sections: uniform rhythm, strict color alternation (cream / white / sky / navy).
+   INVARIANT: padding is the ONLY spacing allowed to touch a section edge —
+   margins are forcibly zeroed at every boundary below. */
 section{padding:56px 0}
+.wrap > :first-child, .split > * > :first-child, .split > :first-child{margin-top:0}
+.wrap > :last-child, .split > * > :last-child, .split > :last-child{margin-bottom:0}
 /* two-column grammar: text left, visual right */
 .split{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
 .problem,.ruleband{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
@@ -108,17 +112,18 @@ h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(
 h2 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);color:inherit;padding:0 2px}
 .sec-head{max-width:640px;margin-bottom:26px}
 
-/* how it works: vertical flow of boxed steps, quiet connector pulse */
-.flow{display:flex;flex-direction:column;align-items:center;max-width:360px;margin:0 auto;width:100%}
-.fnode{width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:20px;text-align:center;box-shadow:0 4px 14px rgba(16,27,51,.05)}
-.fnode img{width:34px;height:34px;margin:0 auto 10px;display:block}
-.fnode b{font-family:'Bricolage Grotesque',sans-serif;font-size:15.5px;font-weight:700;display:block}
-.fnode p{font-size:12.5px;color:var(--mute);margin-top:2px}
-.fline{width:2px;height:40px;background:var(--line);border-radius:2px;position:relative;overflow:hidden;margin:8px auto}
-.fline::after{content:"";position:absolute;left:0;width:100%;top:-60%;height:60%;border-radius:2px;
-  background:linear-gradient(180deg,transparent,var(--blue),transparent);animation:dashv 2.8s ease-in-out infinite}
-.fline+ .fnode + .fline::after{animation-delay:1.4s}
-@keyframes dashv{to{top:110%}}
+/* how it works: dense vertical flow, continuous connector pulses (seamless: two
+   pulses per line, half-period apart, so the next begins before the last ends) */
+.flow{display:flex;flex-direction:column;align-items:center;max-width:290px;margin:0 auto;width:100%}
+.fnode{width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;text-align:center;box-shadow:0 4px 14px rgba(16,27,51,.05)}
+.fnode img{width:30px;height:30px;margin:0 auto 8px;display:block}
+.fnode b{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:700;display:block}
+.fnode p{font-size:12px;color:var(--mute);margin-top:2px}
+.fline{width:2px;height:34px;background:var(--line);border-radius:2px;position:relative;overflow:hidden;margin:6px auto}
+.fline::before,.fline::after{content:"";position:absolute;left:0;width:100%;top:-50%;height:50%;border-radius:2px;
+  background:linear-gradient(180deg,transparent,var(--blue),transparent);animation:dashv 1.4s linear infinite}
+.fline::after{animation-delay:.7s}
+@keyframes dashv{to{top:150%}}
 
 /* three rules: plain statements */
 .rules{display:flex;flex-direction:column;gap:16px}
@@ -368,21 +373,32 @@ function typing(cb){
   d.className = "msg out show";
   d.innerHTML = '<span class="typing"><i></i><i></i><i></i></span>';
   thread.appendChild(d);
-  setTimeout(()=>{ d.remove(); cb(); }, 900 + Math.random()*500);
+  later(()=>{ d.remove(); cb(); }, 900 + Math.random()*500);
 }
+/* Pause while the phone is off-screen: DOM changes during scroll trigger the
+   browser's scroll anchoring, which fights the user's scroll on mobile. */
+let phoneVisible = false, pending = false;
+function later(fn, ms){ setTimeout(()=>{ if (phoneVisible) fn(); else pending = ()=>later(fn, 200); }, ms); }
 function step(){
+  if (!phoneVisible){ pending = step; return; }
   if (i >= script.length){
     i = 0;
-    setTimeout(()=>{ thread.innerHTML=""; step(); }, 4200);
+    later(()=>{ thread.innerHTML=""; step(); }, 4200);
     return;
   }
   const m = script[i++];
-  if (m.t === "out") typing(()=>{ addMsg(m); setTimeout(step, 1500 + Math.random()*700); });
-  else { addMsg(m); setTimeout(step, m.t==="sys" ? 900 : 1600 + Math.random()*700); }
+  if (m.t === "out") typing(()=>{ addMsg(m); later(step, 1500 + Math.random()*700); });
+  else { addMsg(m); later(step, m.t==="sys" ? 900 : 1600 + Math.random()*700); }
 }
 if (matchMedia("(prefers-reduced-motion: reduce)").matches){
   script.forEach(addMsg);
-} else step();
+} else {
+  new IntersectionObserver(es=>{
+    phoneVisible = es[0].isIntersecting;
+    if (phoneVisible && pending){ const p = pending; pending = false; p(); }
+  }, {threshold:.2}).observe(document.querySelector(".phone"));
+  step();
+}
 
 /* scroll reveal + failsafe */
 const io = new IntersectionObserver(es=>es.forEach(e=>{
