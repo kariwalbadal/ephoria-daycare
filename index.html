@@ -75,6 +75,16 @@ h1 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);col
 .typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
 @keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
 
+/* industry facts */
+.facts{padding:70px 0}
+.fcards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.fcard{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:24px 22px;transition:transform .2s ease, box-shadow .2s ease}
+.fcard:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(16,27,51,.10)}
+.fcard b{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(30px,3vw,42px);font-weight:800;line-height:1;display:block;letter-spacing:-.02em}
+.fcard b i{font-style:normal;color:var(--blue)}
+.fcard p{font-size:13.5px;color:var(--ink);margin:10px 0 8px;line-height:1.4}
+.fcard small{font-size:11px;color:var(--mute)}
+
 /* money strip */
 .money{background:var(--ink);color:#fff;padding:60px 0;position:relative;overflow:hidden}
 .money-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;position:relative;z-index:2}
@@ -92,23 +102,23 @@ h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(
 h2 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);color:inherit;padding:0 2px}
 .sec-head{max-width:640px;margin-bottom:52px}
 
-/* steps */
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.step{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:34px 28px;transition:transform .2s ease, box-shadow .2s ease;position:relative}
-.step:hover{transform:translateY(-6px);box-shadow:0 20px 44px rgba(16,27,51,.12)}
-.step img{width:56px;height:56px;margin-bottom:18px}
-.step .n{position:absolute;top:24px;right:24px;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:15px;color:#fff;background:var(--blue);width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center}
-.step h3{font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:700;margin-bottom:8px}
-.step p{font-size:14.5px;color:var(--mute)}
+/* steps: compact horizontal row */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.step{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:20px 22px;transition:transform .2s ease, box-shadow .2s ease;position:relative;display:flex;gap:16px;align-items:center}
+.step:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(16,27,51,.12)}
+.step img{width:42px;height:42px;flex-shrink:0}
+.step .n{display:none}
+.step h3{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;margin-bottom:3px}
+.step p{font-size:13px;color:var(--mute);line-height:1.4}
 
 /* trust cards */
 .trust{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .tcard{border-radius:var(--r);overflow:hidden;background:var(--card);border:1.5px solid var(--line);position:relative;transition:transform .2s ease, box-shadow .2s ease}
 .tcard:hover{transform:translateY(-6px);box-shadow:0 20px 44px rgba(16,27,51,.12)}
-.tcard>img.photo{width:100%;height:185px;object-fit:cover;display:block;filter:saturate(.85)}
-.badge{position:absolute;top:150px;left:22px;width:64px;height:64px;background:#fff;border-radius:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px rgba(16,27,51,.16);border:1.5px solid var(--line)}
-.badge img{width:40px;height:40px}
-.tcard>div.txt{padding:44px 24px 24px}
+.tcard>img.photo{width:100%;aspect-ratio:16/10;height:auto;object-fit:cover;object-position:center 30%;display:block;filter:saturate(.85)}
+.badge{position:absolute;top:16px;right:16px;width:56px;height:56px;background:#fff;border-radius:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px rgba(16,27,51,.16);border:1.5px solid var(--line)}
+.badge img{width:34px;height:34px}
+.tcard>div.txt{padding:20px 24px 24px}
 .tcard b{font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:700;display:block;margin-bottom:6px}
 .tcard p{font-size:14px;color:var(--mute)}
 
@@ -122,7 +132,7 @@ h2 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);col
 .offer-points li{padding:9px 0;font-size:16px;display:flex;gap:12px;align-items:baseline}
 .offer-points li::before{content:"✓";color:#fff;background:var(--blue);border-radius:50%;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transform:translateY(3px)}
 .offer-img{border-radius:var(--r);overflow:hidden}
-.offer-img img{width:100%;height:400px;object-fit:cover;display:block;filter:saturate(.88)}
+.offer-img img{width:100%;aspect-ratio:4/3;height:auto;object-fit:cover;object-position:center 35%;display:block;filter:saturate(.88)}
 
 /* demo */
 .demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
@@ -143,11 +153,18 @@ footer a:hover{color:var(--blue)}
 
 @media(max-width:900px){
   .hero-grid,.offer-card,.demo-grid{grid-template-columns:1fr}
-  .steps,.trust,.money-grid{grid-template-columns:1fr}
   .hero{padding-top:120px}
   .offer-card{padding:60px 26px 36px}
-  .offer-img img{height:250px}
   .floaty{display:none}
+  /* cards stay side by side: swipe horizontally instead of stacking */
+  .fcards,.trust,.steps{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:14px;-webkit-overflow-scrolling:touch}
+  .fcard,.tcard,.step{min-width:240px;flex:0 0 72%;scroll-snap-align:start}
+  .step{flex:0 0 78%}
+  .money-grid{grid-template-columns:repeat(3,1fr);gap:14px}
+  .mcard{flex-direction:column;gap:8px}
+  .mcard img{width:36px;height:36px}
+  .money b{font-size:24px}
+  .money p{font-size:11.5px}
 }
 @media(prefers-reduced-motion:reduce){
   .js .reveal{opacity:1;transform:none;transition:none}
@@ -172,7 +189,7 @@ footer a:hover{color:var(--blue)}
     <div>
       <p class="label">For home care agency owners</p>
       <h1>Turning away one client costs you <mark>$60,000 a year.</mark></h1>
-      <p class="sub">You are not short on applicants. You are short on caregivers who ever
+      <p class="sub">You are not short on applicants. You are short on caregivers who never
         heard back. <b>Ephoria answers every applicant in 60 seconds,</b> screens them by
         text, and puts interviews on your calendar. You staff the clients you used to decline.</p>
       <div class="hero-ctas">
@@ -197,12 +214,27 @@ footer a:hover{color:var(--blue)}
   </div>
 </header>
 
+<section class="facts" id="facts">
+  <div class="wrap">
+    <div class="sec-head reveal" style="margin-bottom:36px">
+      <p class="label">The industry's own numbers</p>
+      <h2 style="font-size:clamp(26px,3vw,38px)">This is the biggest lever <mark>nobody is pulling.</mark></h2>
+    </div>
+    <div class="fcards reveal">
+      <div class="fcard"><b>75<i>%</i></b><p>median caregiver turnover across home care</p><small>Activated Insights 2025 Benchmarking Report</small></div>
+      <div class="fcard"><b>46<i>%</i></b><p>of applicants ever reach an interview. The rest go quiet.</p><small>HelloHire industry data, 2026</small></div>
+      <div class="fcard"><b>2<i>x</i></b><p>the show-up rate when interviews book same day: 60% vs 30% after a week</p><small>HelloHire interview speed benchmark</small></div>
+      <div class="fcard"><b>10<i>–20</i></b><p>agencies every caregiver applies to at once. The first reply wins.</p><small>HelloHire industry data, 2026</small></div>
+    </div>
+  </div>
+</section>
+
 <div class="money">
   <div class="wrap money-grid">
     <div class="mcard reveal"><img src="img/money.png" alt="">
       <div><b>$5,000<i>+</i></b><p>monthly revenue in every client you decline for lack of staff</p></div></div>
     <div class="mcard reveal"><img src="img/chart.png" alt="">
-      <div><b>80<i>%</i></b><p>of new caregiver hires are gone within 100 days</p></div></div>
+      <div><b>42<i>%</i></b><p>of booked interviews never show up. Reminders fix most of that.</p></div></div>
     <div class="mcard reveal"><img src="img/bolt.png" alt="">
       <div><b>60<i>s</i></b><p>until your applicants get a text back. The first agency to answer wins.</p></div></div>
   </div>
@@ -215,20 +247,20 @@ footer a:hover{color:var(--blue)}
       <h2>Hiring runs itself, <mark>while you run the agency.</mark></h2>
     </div>
     <div class="steps reveal">
-      <div class="step"><span class="n">1</span>
+      <div class="step">
         <img src="img/speech.png" alt="">
-        <h3>They apply</h3>
-        <p>Indeed, your site, Facebook, anywhere. No software change needed.</p>
+        <div><h3>They apply</h3>
+        <p>Indeed, your site, anywhere.</p></div>
       </div>
-      <div class="step"><span class="n">2</span>
+      <div class="step">
         <img src="img/bolt.png" alt="">
-        <h3>Ephoria answers first</h3>
-        <p>A text in 60 seconds, under your agency's name. Six short questions.</p>
+        <div><h3>Ephoria answers in 60s</h3>
+        <p>Your name. Six short questions.</p></div>
       </div>
-      <div class="step"><span class="n">3</span>
+      <div class="step">
         <img src="img/calendar.png" alt="">
-        <h3>Interviews hit your calendar</h3>
-        <p>Booked, confirmed, reminded. Nudged all the way to their first shift.</p>
+        <div><h3>Interviews hit your calendar</h3>
+        <p>Booked, confirmed, reminded.</p></div>
       </div>
     </div>
   </div>
@@ -276,7 +308,7 @@ footer a:hover{color:var(--blue)}
           <li>No interviews on your calendar? You pay nothing.</li>
           <li>It works? Flat setup plus a small retainer. A fraction of one recovered client.</li>
         </ul>
-        <a class="btn btn-blue" href="mailto:kariwalbadal@gmail.com?subject=Free%20Ephoria%20pilot">Claim a pilot slot</a>
+        <a class="btn btn-blue" href="mailto:kariwalbadal@gmail.com?subject=Free%20Ephoria%20pilot">Start my free pilot</a>
         <p class="fine">Set up in under a week. We run a small number of pilots at a time.</p>
       </div>
       <div class="offer-img">
@@ -298,7 +330,7 @@ footer a:hover{color:var(--blue)}
       <div style="display:grid;gap:14px">
         <input required name="name" placeholder="Your name" autocomplete="name">
         <input required name="phone" type="tel" placeholder="Mobile number" autocomplete="tel">
-        <button type="submit" class="btn btn-blue">Apply to the demo agency</button>
+        <button type="submit" class="btn btn-blue">Text me in 60 seconds</button>
       </div>
       <p class="fine">By submitting, you agree to receive text messages about this demo
       application. Reply STOP at any time to opt out. Message and data rates may apply.</p>
@@ -310,7 +342,7 @@ footer a:hover{color:var(--blue)}
 <footer>
   <div class="wrap">
     <a class="logo" href="#" style="gap:8px"><svg viewBox="0 0 48 48" style="width:24px;height:24px" aria-hidden="true"><path d="M8 6h32a6 6 0 0 1 6 6v18a6 6 0 0 1-6 6H22l-9 8v-8H8a6 6 0 0 1-6-6V12a6 6 0 0 1 6-6z" fill="#2B5BFF"/><path d="M27 10 15 26h7l-2 12 12-16h-7l2-12z" fill="#FFC531"/></svg><b style="font-size:17px">ephoria<span>.</span></b></a>
-    <div>Automated hiring for home care agencies · <a href="mailto:kariwalbadal@gmail.com">kariwalbadal@gmail.com</a></div>
+    <div>Your applicants, answered in 60 seconds. Your calendar, full of interviews. · <a href="mailto:kariwalbadal@gmail.com">kariwalbadal@gmail.com</a></div>
   </div>
 </footer>
 
