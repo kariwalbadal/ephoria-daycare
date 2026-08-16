@@ -46,7 +46,7 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 .btn-ghost:hover{background:var(--ink);color:#fff}
 
 /* hero */
-.hero{padding:150px 0 90px;position:relative}
+.hero{padding:140px 0 30px;position:relative}
 .hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:56px;align-items:center}
 h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(40px,5.2vw,66px);line-height:1.02;letter-spacing:-.025em;margin:18px 0 22px}
 h1 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);color:inherit;padding:0 2px}
@@ -76,14 +76,17 @@ h1 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);col
 @keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
 
 /* industry facts */
-.facts{padding:70px 0}
-.fcards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:900px}
-.fcard{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:18px 16px;transition:transform .2s ease, box-shadow .2s ease}
+.facts{padding:54px 0 0}
+.fcards{display:grid;grid-template-columns:repeat(4,minmax(0,180px));gap:12px}
+.fcard{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:14px;transition:transform .2s ease, box-shadow .2s ease}
 .fcard:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(16,27,51,.10)}
-.fcard b{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(30px,3vw,42px);font-weight:800;line-height:1;display:block;letter-spacing:-.02em}
+.fcard b{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(24px,2.4vw,32px);font-weight:800;line-height:1;display:block;letter-spacing:-.02em}
 .fcard b i{font-style:normal;color:var(--blue)}
-.fcard p{font-size:13.5px;color:var(--ink);margin:10px 0 8px;line-height:1.4}
-.fcard small{font-size:11px;color:var(--mute)}
+.fcard p{font-size:12.5px;color:var(--ink);margin:8px 0 6px;line-height:1.35}
+.fcard small{font-size:10.5px;color:var(--mute);line-height:1.3;display:block}
+
+/* problem statement */
+.problem{padding:70px 0 90px}
 
 /* money strip */
 .money{background:var(--ink);color:#fff;padding:60px 0;position:relative;overflow:hidden}
@@ -103,7 +106,7 @@ h2 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);col
 .sec-head{max-width:640px;margin-bottom:52px}
 
 /* steps: compact horizontal row */
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,280px));gap:14px}
 .step{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:20px 22px;transition:transform .2s ease, box-shadow .2s ease;position:relative;display:flex;gap:16px;align-items:center}
 .step:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(16,27,51,.12)}
 .step img{width:42px;height:42px;flex-shrink:0}
@@ -156,10 +159,11 @@ footer a:hover{color:var(--blue)}
   .hero{padding-top:120px}
   .offer-card{padding:60px 26px 36px}
   .floaty{display:none}
-  /* cards stay side by side: swipe horizontally instead of stacking */
-  .fcards,.trust,.steps{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:14px;-webkit-overflow-scrolling:touch}
-  .fcard,.tcard,.step{min-width:240px;flex:0 0 72%;scroll-snap-align:start}
-  .step{flex:0 0 78%}
+  /* fact cards: 2x2 grid on mobile; trust/steps swipe side by side */
+  .fcards{grid-template-columns:repeat(2,1fr)}
+  .trust,.steps{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:14px;-webkit-overflow-scrolling:touch}
+  .tcard,.step{min-width:230px;flex:0 0 70%;scroll-snap-align:start}
+  .step{flex:0 0 74%}
   .money-grid{grid-template-columns:repeat(3,1fr);gap:14px}
   .mcard{flex-direction:column;gap:8px}
   .mcard img{width:36px;height:36px}
@@ -189,9 +193,6 @@ footer a:hover{color:var(--blue)}
     <div>
       <p class="label">For home care agency owners</p>
       <h1>Turning away one client costs you <mark>$60,000 a year.</mark></h1>
-      <p class="sub">You are not short on applicants. You are short on caregivers who never
-        heard back. <b>Ephoria answers every applicant in 60 seconds,</b> screens them by
-        text, and puts interviews on your calendar. You staff the clients you used to decline.</p>
       <div class="hero-ctas">
         <a class="btn btn-blue" href="#offer">See pricing</a>
         <a class="btn btn-ghost" href="#how">See it work</a>
@@ -216,15 +217,24 @@ footer a:hover{color:var(--blue)}
 
 <section class="facts" id="facts">
   <div class="wrap">
-    <div class="sec-head reveal" style="margin-bottom:36px">
-      <p class="label">The industry's own numbers</p>
-      <h2 style="font-size:clamp(26px,3vw,38px)">This is the biggest lever <mark>nobody is pulling.</mark></h2>
-    </div>
+    <p class="label reveal" style="margin-bottom:20px">The industry's own numbers</p>
     <div class="fcards reveal">
       <div class="fcard"><b>75<i>%</i></b><p>median caregiver turnover across home care</p><small>Activated Insights 2025 Benchmarking Report</small></div>
       <div class="fcard"><b>54<i>%</i></b><p>of applicants never even get a callback</p><small>HelloHire industry data, 2026</small></div>
-      <div class="fcard"><b>2<i>x</i></b><p>the show-up rate when interviews book same day: 60% vs 30% after a week</p><small>HelloHire interview speed benchmark</small></div>
-      <div class="fcard"><b>10<i>–20</i></b><p>agencies every caregiver applies to at once. The first reply wins.</p><small>HelloHire industry data, 2026</small></div>
+      <div class="fcard"><b>2<i>x</i></b><p>the show-up rate when interviews book same day</p><small>HelloHire interview speed benchmark</small></div>
+      <div class="fcard"><b>10<i>–20</i></b><p>agencies every caregiver applies to at once</p><small>HelloHire industry data, 2026</small></div>
+    </div>
+  </div>
+</section>
+
+<section class="problem">
+  <div class="wrap">
+    <div class="sec-head reveal" style="margin-bottom:0;max-width:760px">
+      <h2>You are not short on applicants. You are short on caregivers <mark>who never heard back.</mark></h2>
+      <p style="color:var(--mute);margin-top:18px;font-size:17px;max-width:560px">Every agency
+      has this problem. Almost nobody fixes it. <b style="color:var(--ink)">Ephoria answers every
+      applicant in 60 seconds,</b> screens them by text, and puts interviews on your calendar.
+      You staff the clients you used to decline.</p>
     </div>
   </div>
 </section>
