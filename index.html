@@ -106,28 +106,29 @@ h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(
 h2 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);color:inherit;padding:0 2px}
 .sec-head{max-width:640px;margin-bottom:26px}
 
-/* how it works: animated flow, left to right */
-.flow{display:flex;align-items:center;max-width:760px}
-.fnode{flex:0 0 auto;width:170px}
-.fnode img{width:40px;height:40px;margin-bottom:10px;animation:bob 3.6s ease-in-out infinite}
+/* how it works: animated flow, boxed nodes, left to right */
+.howband{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.flow{display:flex;align-items:center;max-width:820px}
+.fnode{flex:0 0 auto;width:196px;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:18px}
+.fnode img{width:36px;height:36px;margin-bottom:10px;animation:bob 3.6s ease-in-out infinite}
 .fnode:nth-child(3) img{animation-delay:.7s}
 .fnode:nth-child(5) img{animation-delay:1.4s}
 .fnode b{font-family:'Bricolage Grotesque',sans-serif;font-size:15.5px;font-weight:700;display:block}
 .fnode p{font-size:12.5px;color:var(--mute);margin-top:2px}
-.fline{flex:1;height:3px;background:var(--line);border-radius:2px;position:relative;overflow:hidden;margin:0 14px;top:-14px}
+.fline{flex:1;height:3px;background:var(--line);border-radius:2px;position:relative;overflow:hidden;margin:0 10px}
 .fline::after{content:"";position:absolute;top:0;left:-45%;width:45%;height:100%;background:var(--blue);border-radius:2px;animation:dash 2s ease-in-out infinite}
 .fline:nth-child(4)::after{animation-delay:1s}
 @keyframes dash{to{left:110%}}
 
 /* three rules: plain statements, distinct band */
-.ruleband{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.ruleband{background:var(--bg)}
 .rules{display:flex;flex-direction:column;gap:16px}
 .rule{display:flex;gap:14px;align-items:center}
 .rule img{width:28px;height:28px}
 .rule span{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(18px,2.2vw,24px);font-weight:600}
 
 /* offer */
-.offer{background:linear-gradient(160deg,#EEF2FF, #FDFBF6 70%)}
+.offer{background:var(--bg)}
 .offer-card{background:var(--card);border:1.5px solid var(--line);border-radius:24px;padding:60px;display:grid;grid-template-columns:1.1fr .9fr;gap:52px;align-items:center;box-shadow:0 30px 70px rgba(16,27,51,.10);position:relative;overflow:visible}
 .offer-gift{position:absolute;top:-34px;left:52px;width:76px;filter:drop-shadow(0 12px 22px rgba(16,27,51,.2));animation:bob 3.4s ease-in-out infinite}
 .big{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(40px,4.8vw,64px);font-weight:800;line-height:1.02;letter-spacing:-.025em}
@@ -165,7 +166,7 @@ footer a:hover{color:var(--blue)}
   .demo-grid{gap:26px}
   .flow{flex-direction:column;align-items:flex-start}
   .fnode{width:auto}
-  .fline{flex:none;width:3px;height:42px;margin:10px 0 10px 19px;top:0}
+  .fline{flex:none;width:3px;height:38px;margin:10px 0 10px 34px;top:0}
   .fline::after{left:0;width:100%;top:-45%;height:45%;animation:dashv 2s ease-in-out infinite}
   @keyframes dashv{to{top:110%}}
   .money-grid{grid-template-columns:repeat(3,1fr);gap:14px}
@@ -225,8 +226,8 @@ footer a:hover{color:var(--blue)}
       <h2>You are not short on applicants. You are short on caregivers <mark>who never heard back.</mark></h2>
       <p style="color:var(--mute);margin-top:18px;font-size:17px;max-width:560px">Every agency
       has this problem. Almost nobody fixes it. <b style="color:var(--ink)">Ephoria answers every
-      applicant in 60 seconds,</b> screens them by text, and puts interviews on your calendar.
-      You staff the clients you used to decline.</p>
+      applicant, screens them against the bar you set,</b> and fills your calendar with
+      interviews. You staff the clients you used to decline.</p>
       <div class="hero-ctas" style="margin-top:28px">
         <a class="btn btn-blue" href="mailto:kariwalbadal@gmail.com?subject=Ephoria%20fit%20call">Book a fit call</a>
         <a class="btn btn-ghost" href="#offer">See pricing</a>
@@ -246,7 +247,7 @@ footer a:hover{color:var(--blue)}
   </div>
 </div>
 
-<section id="how">
+<section id="how" class="howband">
   <div class="wrap">
     <div class="sec-head reveal">
       <p class="label">How it works</p>
@@ -261,14 +262,14 @@ footer a:hover{color:var(--blue)}
       <div class="fline"></div>
       <div class="fnode">
         <img src="img/bolt.png" alt="">
-        <b>Answered in 60s</b>
-        <p>Six short questions, by text</p>
+        <b>Screened, instantly</b>
+        <p>Your questions. Your bar.</p>
       </div>
       <div class="fline"></div>
       <div class="fnode">
         <img src="img/calendar.png" alt="">
-        <b>Interview booked</b>
-        <p>On your calendar, reminded</p>
+        <b>Calendar filled</b>
+        <p>Booked, reminded, nudged to day one</p>
       </div>
     </div>
   </div>
@@ -314,13 +315,13 @@ footer a:hover{color:var(--blue)}
 <section class="offer" id="offer">
   <div class="wrap">
     <div class="offer-card reveal">
-      <img class="offer-gift" src="img/gift.png" alt="">
       <div>
         <p class="label">Pricing</p>
         <p class="big" style="margin-top:12px"><mark>$49</mark> to start. <mark>$249</mark> per hire. That's it.</p>
         <p style="font-size:16px;margin:22px 0 28px;max-width:470px">The $49 books your
-        pilot after a 15-minute fit call, and comes back if you walk away. The $249 is
-        billed only when a caregiver works their first shift. Everything in between is $0.</p>
+        pilot after a 15-minute fit call, and it is <b>fully refundable</b>: walk away at
+        any point and it comes back, no questions. The $249 is billed only when a caregiver
+        works their first shift. Everything in between is $0.</p>
         <a class="btn btn-blue" href="mailto:kariwalbadal@gmail.com?subject=Ephoria%20fit%20call">Book a fit call</a>
       </div>
       <div class="offer-img">
@@ -333,7 +334,7 @@ footer a:hover{color:var(--blue)}
 <footer>
   <div class="wrap">
     <a class="logo" href="#" style="gap:8px"><svg viewBox="0 0 48 48" style="width:24px;height:24px" aria-hidden="true"><path d="M8 6h32a6 6 0 0 1 6 6v18a6 6 0 0 1-6 6H22l-9 8v-8H8a6 6 0 0 1-6-6V12a6 6 0 0 1 6-6z" fill="#2B5BFF"/><path d="M27 10 15 26h7l-2 12 12-16h-7l2-12z" fill="#FFC531"/></svg><b style="font-size:17px">ephoria<span>.</span></b></a>
-    <div>Your applicants, answered in 60 seconds. Your calendar, full of interviews. · <a href="mailto:kariwalbadal@gmail.com">kariwalbadal@gmail.com</a></div>
+    <div>Screened applicants. Full calendars. Caregivers who show up. · <a href="mailto:kariwalbadal@gmail.com">kariwalbadal@gmail.com</a></div>
   </div>
 </footer>
 
