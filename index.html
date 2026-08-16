@@ -396,7 +396,7 @@ if (matchMedia("(prefers-reduced-motion: reduce)").matches){
   new IntersectionObserver(es=>{
     phoneVisible = es[0].isIntersecting;
     if (phoneVisible && pending){ const p = pending; pending = false; p(); }
-  }, {threshold:.2}).observe(document.querySelector(".phone"));
+  }, {threshold:0}).observe(document.querySelector(".phone"));
   step();
 }
 
