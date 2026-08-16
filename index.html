@@ -46,8 +46,9 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 .btn-ghost:hover{background:var(--ink);color:#fff}
 
 /* hero */
-.hero{padding:140px 0 30px;position:relative}
-.hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:56px;align-items:center}
+.hero{padding:130px 0 60px;position:relative}
+.hero .fcards{margin:30px 0 60px}
+.hero .stage{margin:0 auto}
 h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(40px,5.2vw,66px);line-height:1.02;letter-spacing:-.025em;margin:18px 0 22px}
 h1 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);color:inherit;padding:0 2px}
 .sub{font-size:18px;color:var(--mute);max-width:500px;margin-bottom:30px}
@@ -106,13 +107,13 @@ h2 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);col
 .sec-head{max-width:640px;margin-bottom:52px}
 
 /* steps: compact horizontal row */
-.steps{display:grid;grid-template-columns:repeat(3,minmax(0,280px));gap:14px}
-.step{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:20px 22px;transition:transform .2s ease, box-shadow .2s ease;position:relative;display:flex;gap:16px;align-items:center}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,236px));gap:12px}
+.step{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;transition:transform .2s ease, box-shadow .2s ease;position:relative;display:flex;gap:12px;align-items:center}
 .step:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(16,27,51,.12)}
-.step img{width:42px;height:42px;flex-shrink:0}
+.step img{width:34px;height:34px;flex-shrink:0}
 .step .n{display:none}
-.step h3{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;margin-bottom:3px}
-.step p{font-size:13px;color:var(--mute);line-height:1.4}
+.step h3{font-family:'Bricolage Grotesque',sans-serif;font-size:14.5px;font-weight:700;margin-bottom:2px}
+.step p{font-size:12px;color:var(--mute);line-height:1.35}
 
 /* trust cards */
 .trust{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
@@ -155,15 +156,16 @@ footer a:hover{color:var(--blue)}
 .js .reveal.on{opacity:1;transform:none}
 
 @media(max-width:900px){
-  .hero-grid,.offer-card,.demo-grid{grid-template-columns:1fr}
-  .hero{padding-top:120px}
+  .offer-card,.demo-grid{grid-template-columns:1fr}
+  .hero{padding-top:110px}
   .offer-card{padding:60px 26px 36px}
   .floaty{display:none}
-  /* fact cards: 2x2 grid on mobile; trust/steps swipe side by side */
+  /* fact cards: 2x2 grid on mobile; trust cards swipe side by side */
   .fcards{grid-template-columns:repeat(2,1fr)}
-  .trust,.steps{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:14px;-webkit-overflow-scrolling:touch}
-  .tcard,.step{min-width:230px;flex:0 0 70%;scroll-snap-align:start}
-  .step{flex:0 0 74%}
+  .trust{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:14px;-webkit-overflow-scrolling:touch}
+  .tcard{min-width:230px;flex:0 0 70%;scroll-snap-align:start}
+  /* steps stay compact: 3 slim rows, no swiping needed at this size */
+  .steps{grid-template-columns:1fr;max-width:340px}
   .money-grid{grid-template-columns:repeat(3,1fr);gap:14px}
   .mcard{flex-direction:column;gap:8px}
   .mcard img{width:36px;height:36px}
@@ -189,19 +191,19 @@ footer a:hover{color:var(--blue)}
 </nav>
 
 <header class="hero">
-  <div class="wrap hero-grid">
-    <div>
-      <p class="label">For home care agency owners</p>
-      <h1>Turning away one client costs you <mark>$60,000 a year.</mark></h1>
-      <div class="hero-ctas">
-        <a class="btn btn-blue" href="#offer">See pricing</a>
-        <a class="btn btn-ghost" href="#how">See it work</a>
-      </div>
+  <div class="wrap">
+    <p class="label">For home care agency owners</p>
+    <h1 style="max-width:900px">Turning away one client costs you <mark>$60,000 a year.</mark></h1>
+    <div class="fcards reveal">
+      <div class="fcard"><b>75<i>%</i></b><p>median caregiver turnover across home care</p><small>Activated Insights 2025 Benchmarking Report</small></div>
+      <div class="fcard"><b>54<i>%</i></b><p>of applicants never even get a callback</p><small>HelloHire industry data, 2026</small></div>
+      <div class="fcard"><b>2<i>x</i></b><p>the show-up rate when interviews book same day</p><small>HelloHire interview speed benchmark</small></div>
+      <div class="fcard"><b>10<i>–20</i></b><p>agencies every caregiver applies to at once</p><small>HelloHire industry data, 2026</small></div>
     </div>
     <div class="stage">
-      <img class="floaty" src="img/bolt.png" alt="" width="58" style="--tilt:-8deg;top:-24px;left:-30px">
-      <img class="floaty" src="img/speech.png" alt="" width="54" style="--tilt:6deg;top:120px;right:-38px;animation-delay:.8s">
-      <img class="floaty" src="img/calendar.png" alt="" width="60" style="--tilt:-5deg;bottom:60px;left:-44px;animation-delay:1.5s">
+      <img class="floaty" src="img/bolt.png" alt="" width="58" style="--tilt:-8deg;top:-24px;left:-46px">
+      <img class="floaty" src="img/speech.png" alt="" width="54" style="--tilt:6deg;top:120px;right:-52px;animation-delay:.8s">
+      <img class="floaty" src="img/calendar.png" alt="" width="60" style="--tilt:-5deg;bottom:60px;left:-56px;animation-delay:1.5s">
       <div class="phone" aria-hidden="true">
         <div class="phone-screen">
           <div class="phone-top">
@@ -215,18 +217,6 @@ footer a:hover{color:var(--blue)}
   </div>
 </header>
 
-<section class="facts" id="facts">
-  <div class="wrap">
-    <p class="label reveal" style="margin-bottom:20px">The industry's own numbers</p>
-    <div class="fcards reveal">
-      <div class="fcard"><b>75<i>%</i></b><p>median caregiver turnover across home care</p><small>Activated Insights 2025 Benchmarking Report</small></div>
-      <div class="fcard"><b>54<i>%</i></b><p>of applicants never even get a callback</p><small>HelloHire industry data, 2026</small></div>
-      <div class="fcard"><b>2<i>x</i></b><p>the show-up rate when interviews book same day</p><small>HelloHire interview speed benchmark</small></div>
-      <div class="fcard"><b>10<i>–20</i></b><p>agencies every caregiver applies to at once</p><small>HelloHire industry data, 2026</small></div>
-    </div>
-  </div>
-</section>
-
 <section class="problem">
   <div class="wrap">
     <div class="sec-head reveal" style="margin-bottom:0;max-width:760px">
@@ -235,6 +225,10 @@ footer a:hover{color:var(--blue)}
       has this problem. Almost nobody fixes it. <b style="color:var(--ink)">Ephoria answers every
       applicant in 60 seconds,</b> screens them by text, and puts interviews on your calendar.
       You staff the clients you used to decline.</p>
+      <div class="hero-ctas" style="margin-top:28px">
+        <a class="btn btn-blue" href="mailto:kariwalbadal@gmail.com?subject=Ephoria%20fit%20call">Book a fit call</a>
+        <a class="btn btn-ghost" href="#offer">See pricing</a>
+      </div>
     </div>
   </div>
 </section>
