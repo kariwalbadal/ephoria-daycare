@@ -5,114 +5,369 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ephoria — Caregiver applicants, texted back in 60 seconds</title>
 <meta name="description" content="Ephoria texts every caregiver applicant within 60 seconds, screens them by SMS, and books interviews straight into your calendar.">
-<script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-white text-slate-900 antialiased">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0b100e;
+  --ink-2:#111814;
+  --cream:#f4efe6;
+  --cream-dim:#c9c2b4;
+  --mute:#8a917f;
+  --sage:#7fb69e;
+  --amber:#d9a441;
+  --line:rgba(244,239,230,.12);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--cream);font-family:'Inter',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.serif{font-family:'Fraunces',serif}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+.label{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--sage);font-weight:600}
 
-<!-- Above the fold -->
-<header class="max-w-3xl mx-auto px-6 pt-20 pb-16">
-  <p class="text-sm font-semibold tracking-wide text-teal-700 uppercase mb-6">Ephoria · for home care agencies</p>
-  <h1 class="text-4xl sm:text-5xl font-bold leading-tight mb-6">
-    Every caregiver applicant, texted back in 60 seconds.
-  </h1>
-  <p class="text-xl text-slate-600 mb-8">
-    Most applicants apply to five agencies and take the first one that answers.
-    Ephoria answers first — it screens your applicants by text and books the good ones
-    into your calendar before they take another job.
-  </p>
-  <a href="mailto:kariwalbadal@gmail.com?subject=Ephoria%2014-day%20pilot"
-     class="inline-block bg-teal-700 hover:bg-teal-800 text-white font-semibold px-8 py-4 rounded-lg text-lg">
-    Ask about the 14-day pilot
-  </a>
+/* grain + glow atmosphere */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.035 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E")}
+.glow{position:absolute;border-radius:50%;filter:blur(110px);pointer-events:none}
+
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(14px);background:rgba(11,16,14,.72);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-family:'Fraunces',serif;font-size:20px;font-weight:500;letter-spacing:.06em;color:var(--cream);text-decoration:none}
+.logo span{color:var(--sage)}
+.btn{display:inline-block;text-decoration:none;font-weight:600;font-size:14px;letter-spacing:.04em;border-radius:2px;transition:all .25s ease;cursor:pointer}
+.btn-solid{background:var(--cream);color:var(--ink);padding:13px 26px}
+.btn-solid:hover{background:var(--sage);color:var(--ink)}
+.btn-ghost{border:1px solid var(--line);color:var(--cream);padding:12px 25px}
+.btn-ghost:hover{border-color:var(--sage);color:var(--sage)}
+
+/* hero */
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;padding:120px 0 80px;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:center;position:relative;z-index:2}
+h1{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(40px,5.4vw,68px);line-height:1.06;letter-spacing:-.01em;margin:22px 0 26px}
+h1 em{font-style:italic;color:var(--sage)}
+.sub{font-size:18px;color:var(--cream-dim);max-width:520px;margin-bottom:36px}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:44px}
+.chips{display:flex;gap:26px;flex-wrap:wrap}
+.chip{font-size:13px;color:var(--mute)}
+.chip b{display:block;font-family:'Fraunces',serif;font-size:26px;font-weight:500;color:var(--cream);letter-spacing:0}
+
+/* phone */
+.phone{width:320px;max-width:88vw;margin:0 auto;background:#05080a;border:1px solid rgba(244,239,230,.16);border-radius:38px;padding:14px;box-shadow:0 40px 90px rgba(0,0,0,.6),0 0 0 1px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.04)}
+.phone-screen{background:#0d1412;border-radius:26px;overflow:hidden;display:flex;flex-direction:column;height:560px}
+.phone-top{padding:14px 16px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--sage),#3c6f5a);display:flex;align-items:center;justify-content:center;font-weight:600;color:var(--ink);font-size:14px}
+.phone-top small{display:block;color:var(--mute);font-size:11px}
+.phone-top b{font-size:13px;font-weight:600}
+.thread{flex:1;padding:16px 14px;display:flex;flex-direction:column;gap:10px;overflow:hidden;justify-content:flex-end}
+.msg{max-width:82%;padding:9px 13px;border-radius:16px;font-size:13.5px;line-height:1.45;opacity:0;transform:translateY(12px);transition:opacity .45s ease,transform .45s ease}
+.msg.show{opacity:1;transform:none}
+.msg.out{align-self:flex-start;background:#1d2a24;color:var(--cream);border-bottom-left-radius:4px}
+.msg.in{align-self:flex-end;background:var(--sage);color:var(--ink);border-bottom-right-radius:4px;font-weight:500}
+.msg.sys{align-self:center;background:none;color:var(--mute);font-size:11px;padding:2px}
+.typing{display:inline-flex;gap:4px;align-items:center}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--mute);animation:blink 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+
+/* marquee */
+.marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0;overflow:hidden;white-space:nowrap;background:var(--ink-2)}
+.marquee-track{display:inline-block;animation:scroll 38s linear infinite}
+.marquee span{font-family:'Fraunces',serif;font-size:15px;color:var(--cream-dim);margin:0 28px}
+.marquee b{color:var(--amber);font-weight:500}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* sections */
+section{position:relative;padding:110px 0}
+.sec-head{max-width:640px;margin-bottom:64px}
+h2{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(30px,3.6vw,46px);line-height:1.12;margin-top:18px}
+h2 em{font-style:italic;color:var(--sage)}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.step{background:var(--ink);padding:44px 34px;transition:background .3s}
+.step:hover{background:var(--ink-2)}
+.step .num{font-family:'Fraunces',serif;font-size:52px;font-weight:300;color:var(--sage);line-height:1}
+.step h3{font-size:17px;font-weight:600;margin:22px 0 10px}
+.step p{font-size:14.5px;color:var(--cream-dim)}
+
+/* honesty strip */
+.honest{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:70px}
+.honest div{border-top:1px solid var(--line);padding-top:20px}
+.honest b{font-size:14px;display:block;margin-bottom:6px;color:var(--cream)}
+.honest p{font-size:13.5px;color:var(--mute)}
+
+/* pilot */
+.pilot-card{border:1px solid var(--line);background:linear-gradient(160deg,var(--ink-2),#0c1512 60%);padding:70px 60px;display:grid;grid-template-columns:1.2fr .8fr;gap:60px;align-items:center;position:relative;overflow:hidden}
+.price{font-family:'Fraunces',serif;font-size:clamp(54px,6vw,84px);font-weight:300;line-height:1}
+.price small{font-size:18px;color:var(--mute);font-family:'Inter',sans-serif}
+.pilot-points{list-style:none;margin:28px 0 36px}
+.pilot-points li{padding:10px 0;border-bottom:1px solid var(--line);font-size:15px;color:var(--cream-dim);display:flex;gap:12px}
+.pilot-points li::before{content:"—";color:var(--sage)}
+
+/* form */
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:start}
+input{width:100%;background:var(--ink-2);border:1px solid var(--line);color:var(--cream);padding:15px 18px;font-size:15px;font-family:inherit;border-radius:2px;outline:none;transition:border .25s}
+input:focus{border-color:var(--sage)}
+input::placeholder{color:var(--mute)}
+form .btn{width:100%;border:none;font-size:15px}
+.fine{font-size:12px;color:var(--mute);margin-top:14px;line-height:1.6}
+#form-note{margin-top:16px;font-size:14px;color:var(--sage);display:none}
+
+footer{border-top:1px solid var(--line);padding:44px 0;font-size:13px;color:var(--mute)}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+footer a{color:var(--cream-dim);text-decoration:none}
+footer a:hover{color:var(--sage)}
+
+/* reveal only hides content when JS is actually running (html.js) */
+.js .reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease}
+.js .reveal.on{opacity:1;transform:none}
+
+@media(max-width:880px){
+  .hero-grid,.pilot-card,.demo-grid{grid-template-columns:1fr}
+  .steps,.honest{grid-template-columns:1fr}
+  .hero{padding-top:110px}
+  .pilot-card{padding:44px 28px}
+}
+@media(prefers-reduced-motion:reduce){
+  .marquee-track{animation:none}
+  .reveal{opacity:1;transform:none;transition:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="#">Ephoria<span>.</span></a>
+    <div style="display:flex;gap:12px;align-items:center">
+      <a class="btn btn-ghost" href="#demo" style="padding:10px 18px;font-size:13px">Try the demo</a>
+      <a class="btn btn-solid" href="mailto:kariwalbadal@gmail.com?subject=Ephoria%2014-day%20pilot" style="padding:11px 20px;font-size:13px">Start the pilot</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="glow" style="width:560px;height:560px;background:rgba(127,182,158,.13);top:-120px;right:-100px"></div>
+  <div class="glow" style="width:420px;height:420px;background:rgba(217,164,65,.07);bottom:-140px;left:-120px"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <p class="label">For home care agency owners</p>
+      <h1>Every applicant, texted back in <em>sixty seconds.</em></h1>
+      <p class="sub">Caregivers apply to five agencies and take the first one that answers.
+        Ephoria answers first — it screens every applicant by text and books the good ones
+        into your calendar before they take another job.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-solid" href="mailto:kariwalbadal@gmail.com?subject=Ephoria%2014-day%20pilot">Ask about the 14-day pilot</a>
+        <a class="btn btn-ghost" href="#how">See how it works</a>
+      </div>
+      <div class="chips">
+        <div class="chip"><b>60s</b>first text out</div>
+        <div class="chip"><b>6</b>questions, max</div>
+        <div class="chip"><b>8–9</b>daytime hours only</div>
+        <div class="chip"><b>0</b>applicants ignored</div>
+      </div>
+    </div>
+    <div class="phone" aria-hidden="true">
+      <div class="phone-screen">
+        <div class="phone-top">
+          <div class="avatar">S</div>
+          <div><b>Sunrise Home Care</b><small>demo conversation</small></div>
+        </div>
+        <div class="thread" id="thread"></div>
+      </div>
+    </div>
+  </div>
 </header>
 
-<!-- The flow -->
-<section class="bg-slate-50 py-16">
-  <div class="max-w-3xl mx-auto px-6">
-    <h2 class="text-2xl font-bold mb-8">How it works</h2>
-    <ol class="space-y-6 text-lg">
-      <li class="flex gap-4"><span class="font-bold text-teal-700">1.</span>
-        A caregiver applies — from Indeed, your website, or anywhere else.</li>
-      <li class="flex gap-4"><span class="font-bold text-teal-700">2.</span>
-        They get a text within 60 seconds and answer a few screening questions by SMS.</li>
-      <li class="flex gap-4"><span class="font-bold text-teal-700">3.</span>
-        Qualified applicants pick an interview slot that lands straight on your calendar.</li>
-    </ol>
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="marquee">
+    <span>Most caregiver applicants <b>never hear back at all</b></span>
+    <span>·</span>
+    <span>Up to <b>80% of new hires</b> are gone within 100 days</span>
+    <span>·</span>
+    <span>Every client you turn away is <b>$5,000–8,000 a month</b></span>
+    <span>·</span>
+    <span>The agency that <b>answers first</b> gets the caregiver</span>
+    <span>·</span>
+  </div>
+</div>
+
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="label">How it works</p>
+      <h2>From application to interview, <em>while you run your agency.</em></h2>
+    </div>
+    <div class="steps reveal">
+      <div class="step">
+        <div class="num">01</div>
+        <h3>They apply</h3>
+        <p>From Indeed, your website, Facebook — anywhere. Webhook, form, or even a pasted
+        CSV. No ATS integration required to start.</p>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <h3>Ephoria texts first</h3>
+        <p>Within 60 seconds, every applicant gets a text with your agency's name on it.
+        Six short screening questions, one at a time — availability, transport,
+        certification, experience.</p>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <h3>Interviews appear on your calendar</h3>
+        <p>Qualified applicants pick from three real slots. Booked, confirmed, reminded
+        the day before and the day of. Nudges continue through their first shift.</p>
+      </div>
+    </div>
+    <div class="honest reveal">
+      <div>
+        <b>It never claims to be human.</b>
+        <p>Asked directly, it says exactly what it is: your scheduling assistant, able to
+        book right now.</p>
+      </div>
+      <div>
+        <b>It knows when to stop.</b>
+        <p>STOP always means stop. Confused twice, asking for a person, anything urgent —
+        the conversation is flagged to you and the machine steps aside.</p>
+      </div>
+      <div>
+        <b>It keeps civilized hours.</b>
+        <p>No messages before 8am or after 9pm in the applicant's own timezone. Ever.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- The pilot offer -->
-<section class="py-16">
-  <div class="max-w-3xl mx-auto px-6">
-    <h2 class="text-2xl font-bold mb-4">The pilot</h2>
-    <p class="text-lg text-slate-600 mb-4">
-      <span class="font-semibold text-slate-900">$500 for 14 days</span> on your real
-      applicant flow. You watch every conversation. If it doesn't book interviews,
-      walk away. If it does, it's $2,500/month and you never lose another applicant
-      to silence.
-    </p>
-    <a href="mailto:kariwalbadal@gmail.com?subject=Ephoria%2014-day%20pilot"
-       class="inline-block border-2 border-teal-700 text-teal-700 hover:bg-teal-50 font-semibold px-8 py-3 rounded-lg">
-      Email to start
-    </a>
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="pilot-card reveal">
+      <div class="glow" style="width:300px;height:300px;background:rgba(127,182,158,.1);top:-80px;right:-60px"></div>
+      <div>
+        <p class="label">The pilot</p>
+        <h2 style="margin-bottom:8px">Fourteen days on your <em>real</em> applicant flow.</h2>
+        <ul class="pilot-points">
+          <li>Runs on your actual applicants, under your agency's name</li>
+          <li>You watch every conversation, live</li>
+          <li>If it doesn't book interviews, walk away</li>
+          <li>If it does — $2,500/month, cancel anytime</li>
+        </ul>
+        <a class="btn btn-solid" href="mailto:kariwalbadal@gmail.com?subject=Ephoria%2014-day%20pilot">Email to start</a>
+      </div>
+      <div style="text-align:right">
+        <div class="price">$500<small> / 14 days</small></div>
+        <p style="color:var(--mute);font-size:14px;margin-top:14px">One agency. One number.<br>Set up in under a week.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- Demo intake form -->
-<section class="bg-slate-50 py-16" id="apply">
-  <div class="max-w-3xl mx-auto px-6">
-    <h2 class="text-2xl font-bold mb-2">See it from the applicant's side</h2>
-    <p class="text-slate-600 mb-8">Fill this in as if you were applying for a caregiver
-      job, and watch what your applicants would experience.</p>
-    <form id="intake" class="space-y-4 max-w-md">
-      <input required name="name" placeholder="Your name"
-             class="w-full border border-slate-300 rounded-lg px-4 py-3">
-      <input required name="phone" type="tel" placeholder="Mobile number"
-             class="w-full border border-slate-300 rounded-lg px-4 py-3">
-      <button type="submit"
-              class="w-full bg-teal-700 hover:bg-teal-800 text-white font-semibold px-6 py-3 rounded-lg">
-        Apply (demo)
-      </button>
-      <p class="text-xs text-slate-500">By submitting, you agree to receive text messages
-        about this application. Reply STOP at any time to opt out. Message and data rates
-        may apply.</p>
-      <p id="form-note" class="text-sm text-slate-600 hidden"></p>
+<section id="demo" style="background:var(--ink-2);border-top:1px solid var(--line)">
+  <div class="wrap demo-grid">
+    <div class="reveal">
+      <p class="label">Try it yourself</p>
+      <h2>See it from the <em>applicant's</em> side.</h2>
+      <p style="color:var(--cream-dim);margin-top:18px;max-width:420px">Fill this in as if
+      you were applying for a caregiver job with a demo agency. Watch what your applicants
+      would experience — starting with how fast their phone buzzes.</p>
+    </div>
+    <form id="intake" class="reveal">
+      <div style="display:grid;gap:14px">
+        <input required name="name" placeholder="Your name" autocomplete="name">
+        <input required name="phone" type="tel" placeholder="Mobile number" autocomplete="tel">
+        <button type="submit" class="btn btn-solid">Apply to the demo agency</button>
+      </div>
+      <p class="fine">By submitting, you agree to receive text messages about this demo
+      application. Reply STOP at any time to opt out. Message and data rates may apply.</p>
+      <p id="form-note"></p>
     </form>
   </div>
 </section>
 
-<footer class="py-10 border-t border-slate-200">
-  <div class="max-w-3xl mx-auto px-6 text-sm text-slate-500">
-    Ephoria · automated hiring for home care agencies ·
-    <a class="underline" href="mailto:kariwalbadal@gmail.com">kariwalbadal@gmail.com</a>
+<footer>
+  <div class="wrap">
+    <div>Ephoria — automated hiring for home care agencies</div>
+    <div><a href="mailto:kariwalbadal@gmail.com">kariwalbadal@gmail.com</a></div>
   </div>
 </footer>
 
 <script>
-// STEP 5 webhook. Empty until the screening service is deployed (STEP 7).
-const WEBHOOK_URL = "";
+document.documentElement.classList.add("js");
 
-document.getElementById("intake").addEventListener("submit", async (e) => {
+/* ---- SMS demo loop ---- */
+const script = [
+  {t:"sys", x:"Applied on Indeed · 40 seconds ago"},
+  {t:"out", x:"Hi Maria — this is the scheduling assistant for Sunrise Home Care. We just got your application. Mind a few quick questions? Reply STOP to opt out."},
+  {t:"in",  x:"ok sure"},
+  {t:"out", x:"Great. Which days can you usually work — weekdays, weekends, or both?"},
+  {t:"in",  x:"weekdays mostly, some saturdays"},
+  {t:"out", x:"Do you have reliable transportation to reach clients?"},
+  {t:"in",  x:"yes i have a car"},
+  {t:"out", x:"Are you a CNA, an HHA, or neither? Neither is fine."},
+  {t:"in",  x:"CNA, 3 yrs experience"},
+  {t:"out", x:"That's exactly what they're looking for. Three interview slots are open: Tue 10:00, Tue 2:00, Wed 9:00. Which suits you?"},
+  {t:"in",  x:"tue 2pm works"},
+  {t:"out", x:"Booked — Tuesday, 2:00 pm. I'll text you the address and what to bring. See you there, Maria."},
+];
+const thread = document.getElementById("thread");
+let i = 0;
+function addMsg(m){
+  const d = document.createElement("div");
+  d.className = "msg " + m.t;
+  d.textContent = m.x;
+  thread.appendChild(d);
+  while (thread.children.length > 7) thread.removeChild(thread.firstChild);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add("show")));
+}
+function typing(cb){
+  const d = document.createElement("div");
+  d.className = "msg out show typing-wrap";
+  d.innerHTML = '<span class="typing"><i></i><i></i><i></i></span>';
+  thread.appendChild(d);
+  setTimeout(()=>{ d.remove(); cb(); }, 900 + Math.random()*500);
+}
+function step(){
+  if (i >= script.length){
+    i = 0;
+    setTimeout(()=>{ thread.innerHTML=""; step(); }, 4200);
+    return;
+  }
+  const m = script[i++];
+  if (m.t === "out") typing(()=>{ addMsg(m); setTimeout(step, 1500 + Math.random()*700); });
+  else { addMsg(m); setTimeout(step, m.t==="sys" ? 900 : 1600 + Math.random()*700); }
+}
+if (matchMedia("(prefers-reduced-motion: reduce)").matches){
+  script.forEach(addMsg);
+} else step();
+
+/* ---- marquee duplicate for seamless loop ---- */
+const mq = document.getElementById("marquee");
+mq.innerHTML += mq.innerHTML;
+
+/* ---- scroll reveal ---- */
+const io = new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){ e.target.classList.add("on"); io.unobserve(e.target); }
+}),{threshold:.15});
+document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+
+/* ---- intake form: STEP 5 webhook (empty until service deploys) ---- */
+const WEBHOOK_URL = "";
+document.getElementById("intake").addEventListener("submit", async (e)=>{
   e.preventDefault();
   const note = document.getElementById("form-note");
-  note.classList.remove("hidden");
-  if (!WEBHOOK_URL) {
+  note.style.display = "block";
+  if (!WEBHOOK_URL){
     note.textContent = "The live demo line isn't connected yet — email us and we'll show you directly.";
     return;
   }
   const data = Object.fromEntries(new FormData(e.target));
-  try {
-    const r = await fetch(WEBHOOK_URL, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({...data, source: "form"}),
-    });
-    note.textContent = r.ok
-      ? "Done — check your phone. A text is on its way."
-      : "Something went wrong. Email us instead.";
-  } catch {
-    note.textContent = "Something went wrong. Email us instead.";
-  }
+  try{
+    const r = await fetch(WEBHOOK_URL,{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({...data, source:"form"})});
+    note.textContent = r.ok ? "Done — check your phone. A text is on its way."
+                            : "Something went wrong. Email us instead.";
+  }catch{ note.textContent = "Something went wrong. Email us instead."; }
 });
 </script>
 
