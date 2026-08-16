@@ -28,7 +28,7 @@ html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--ink);font-family:'Figtree',system-ui,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 .disp{font-family:'Bricolage Grotesque',sans-serif}
 .wrap{max-width:1140px;margin:0 auto;padding:0 24px}
-.label{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);font-weight:700}
+.label{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);font-weight:700;margin-bottom:12px}
 img.emo{display:inline-block;vertical-align:middle}
 
 /* nav + logo */
@@ -46,10 +46,10 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 .btn-ghost:hover{background:var(--ink);color:#fff}
 
 /* hero */
-.hero{padding:118px 0 56px;position:relative}
+.hero{padding:122px 0 56px;position:relative}  /* 66px fixed nav + 56px = same visual gap as every section */
 .hero .fcards{margin:26px 0 0}
 .stage{margin:0 auto;position:relative}
-h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(40px,5.2vw,66px);line-height:1.02;letter-spacing:-.025em;margin:18px 0 22px}
+h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(40px,5.2vw,66px);line-height:1.02;letter-spacing:-.025em;margin:0 0 22px}
 h1 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);color:inherit;padding:0 2px}
 .sub{font-size:18px;color:var(--mute);max-width:500px;margin-bottom:30px}
 .sub b{color:var(--ink)}
@@ -102,7 +102,7 @@ h1 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);col
 section{padding:56px 0}
 .problem,.ruleband{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .band-sky{background:#EEF2FF}
-h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(30px,3.6vw,46px);line-height:1.06;margin-top:14px;letter-spacing:-.02em}
+h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(30px,3.6vw,46px);line-height:1.06;margin-top:0;letter-spacing:-.02em}
 h2 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);color:inherit;padding:0 2px}
 .sec-head{max-width:640px;margin-bottom:26px}
 
@@ -156,17 +156,21 @@ footer a:hover{color:var(--blue)}
 
 @media(max-width:900px){
   .offer-card,.demo-grid{grid-template-columns:1fr}
-  .hero{padding-top:110px}
+  .hero{padding-top:122px}
   .offer-card{padding:60px 26px 36px}
   .floaty{display:none}
   /* fact cards: 2x2 grid on mobile; flow runs vertically */
   .fcards{grid-template-columns:repeat(2,1fr)}
   .demo-grid{gap:26px}
-  .flow{flex-direction:column;align-items:flex-start}
-  .fnode{width:auto}
-  .fline{flex:none;width:3px;height:38px;margin:10px 0 10px 34px;top:0}
+  /* flow: vertical, centered, everything inside the boxes centered too */
+  .flow{flex-direction:column;align-items:center;margin:0 auto}
+  .fnode{width:100%;max-width:300px;text-align:center}
+  .fnode img{margin-left:auto;margin-right:auto;display:block}
+  .fline{flex:none;width:3px;height:38px;margin:10px auto;top:0}
   .fline::after{left:0;width:100%;top:-45%;height:45%;animation:dashv 2s ease-in-out infinite}
   @keyframes dashv{to{top:110%}}
+  /* money stats centered in their cards */
+  .mcard{align-items:center;text-align:center}
   .money-grid{grid-template-columns:repeat(3,1fr);gap:14px}
   .mcard{flex-direction:column;gap:8px}
   .mcard img{width:36px;height:36px}
@@ -213,11 +217,7 @@ footer a:hover{color:var(--blue)}
       applicant, screens them against the bar you set,</b> and fills your calendar with
       interviews. You staff the clients you used to decline.</p>
     </div>
-  </div>
-</section>
-
-<section class="band-sky">
-  <div class="wrap" style="display:flex;flex-direction:column;align-items:center;gap:30px">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:30px;margin-top:44px">
     <div class="stage">
       <img class="floaty" src="img/bolt.png" alt="" width="58" style="--tilt:-8deg;top:-24px;left:-46px">
       <img class="floaty" src="img/speech.png" alt="" width="54" style="--tilt:6deg;top:120px;right:-52px;animation-delay:.8s">
@@ -235,6 +235,7 @@ footer a:hover{color:var(--blue)}
     <div class="hero-ctas">
       <a class="btn btn-blue" href="mailto:kariwalbadal@gmail.com?subject=Ephoria%20fit%20call">Book a fit call</a>
       <a class="btn btn-ghost" href="#offer">See pricing</a>
+    </div>
     </div>
   </div>
 </section>
@@ -289,9 +290,6 @@ footer a:hover{color:var(--blue)}
       <div class="rule"><img src="img/hourglass.png" alt=""><span>It never lets a booked interview go quiet.</span></div>
       <div class="rule"><img src="img/moon.png" alt=""><span>Civilized hours for applicants. On duty 24/7 for you.</span></div>
     </div>
-    <p class="fine reveal" style="margin-top:18px;max-width:520px">Applications are caught
-    around the clock. Someone applies at 11pm? They are first in line at 8:00am sharp,
-    exactly as texting law requires.</p>
   </div>
 </section>
 
