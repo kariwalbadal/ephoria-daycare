@@ -46,7 +46,7 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 .btn-ghost:hover{background:var(--ink);color:#fff}
 
 /* hero */
-.hero{padding:118px 0 34px;position:relative}
+.hero{padding:118px 0 0;position:relative}
 .hero .fcards{margin:26px 0 38px}
 .hero .stage{margin:0 auto}
 h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(40px,5.2vw,66px);line-height:1.02;letter-spacing:-.025em;margin:18px 0 22px}
@@ -87,7 +87,7 @@ h1 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);col
 .fcard small{font-size:10.5px;color:var(--mute);line-height:1.3;display:block}
 
 /* problem statement */
-.problem{padding:34px 0 52px}
+.problem{padding:38px 0 52px}
 
 /* money strip */
 .money{background:var(--ink);color:#fff;padding:38px 0;position:relative;overflow:hidden}
@@ -106,16 +106,21 @@ h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(
 h2 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);color:inherit;padding:0 2px}
 .sec-head{max-width:640px;margin-bottom:26px}
 
-/* steps: compact horizontal row */
-.steps{display:grid;grid-template-columns:repeat(3,minmax(0,236px));gap:12px}
-.step{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;transition:transform .2s ease, box-shadow .2s ease;position:relative;display:flex;gap:12px;align-items:center}
-.step:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(16,27,51,.12)}
-.step img{width:34px;height:34px;flex-shrink:0}
-.step .n{display:none}
-.step h3{font-family:'Bricolage Grotesque',sans-serif;font-size:14.5px;font-weight:700;margin-bottom:2px}
-.step p{font-size:12px;color:var(--mute);line-height:1.35}
+/* how it works: animated flow, left to right */
+.flow{display:flex;align-items:center;max-width:760px}
+.fnode{flex:0 0 auto;width:170px}
+.fnode img{width:40px;height:40px;margin-bottom:10px;animation:bob 3.6s ease-in-out infinite}
+.fnode:nth-child(3) img{animation-delay:.7s}
+.fnode:nth-child(5) img{animation-delay:1.4s}
+.fnode b{font-family:'Bricolage Grotesque',sans-serif;font-size:15.5px;font-weight:700;display:block}
+.fnode p{font-size:12.5px;color:var(--mute);margin-top:2px}
+.fline{flex:1;height:3px;background:var(--line);border-radius:2px;position:relative;overflow:hidden;margin:0 14px;top:-14px}
+.fline::after{content:"";position:absolute;top:0;left:-45%;width:45%;height:100%;background:var(--blue);border-radius:2px;animation:dash 2s ease-in-out infinite}
+.fline:nth-child(4)::after{animation-delay:1s}
+@keyframes dash{to{left:110%}}
 
-/* three rules: plain statements */
+/* three rules: plain statements, distinct band */
+.ruleband{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .rules{display:flex;flex-direction:column;gap:16px}
 .rule{display:flex;gap:14px;align-items:center}
 .rule img{width:28px;height:28px}
@@ -155,9 +160,14 @@ footer a:hover{color:var(--blue)}
   .hero{padding-top:110px}
   .offer-card{padding:60px 26px 36px}
   .floaty{display:none}
-  /* fact cards: 2x2 grid on mobile; steps: 3 slim rows, nothing scrolls sideways */
+  /* fact cards: 2x2 grid on mobile; flow runs vertically */
   .fcards{grid-template-columns:repeat(2,1fr)}
-  .steps{grid-template-columns:1fr;max-width:340px}
+  .demo-grid{gap:26px}
+  .flow{flex-direction:column;align-items:flex-start}
+  .fnode{width:auto}
+  .fline{flex:none;width:3px;height:42px;margin:10px 0 10px 19px;top:0}
+  .fline::after{left:0;width:100%;top:-45%;height:45%;animation:dashv 2s ease-in-out infinite}
+  @keyframes dashv{to{top:110%}}
   .money-grid{grid-template-columns:repeat(3,1fr);gap:14px}
   .mcard{flex-direction:column;gap:8px}
   .mcard img{width:36px;height:36px}
@@ -242,68 +252,50 @@ footer a:hover{color:var(--blue)}
       <p class="label">How it works</p>
       <h2>Hiring runs itself, <mark>while you run the agency.</mark></h2>
     </div>
-    <div class="steps reveal">
-      <div class="step">
+    <div class="flow reveal">
+      <div class="fnode">
         <img src="img/speech.png" alt="">
-        <div><h3>They apply</h3>
-        <p>Indeed, your site, anywhere.</p></div>
+        <b>They apply</b>
+        <p>Indeed, your site, anywhere</p>
       </div>
-      <div class="step">
+      <div class="fline"></div>
+      <div class="fnode">
         <img src="img/bolt.png" alt="">
-        <div><h3>Ephoria answers in 60s</h3>
-        <p>Your name. Six short questions.</p></div>
+        <b>Answered in 60s</b>
+        <p>Six short questions, by text</p>
       </div>
-      <div class="step">
+      <div class="fline"></div>
+      <div class="fnode">
         <img src="img/calendar.png" alt="">
-        <div><h3>Interviews hit your calendar</h3>
-        <p>Booked, confirmed, reminded.</p></div>
+        <b>Interview booked</b>
+        <p>On your calendar, reminded</p>
       </div>
     </div>
   </div>
 </section>
 
-<section style="padding-top:0">
+<section class="ruleband">
   <div class="wrap">
     <div class="sec-head reveal">
-      <p class="label">Built for care, not for tech</p>
       <h2>Three rules it <mark>never breaks.</mark></h2>
     </div>
     <div class="rules reveal">
       <div class="rule"><img src="img/handshake.png" alt=""><span>It never pretends to be human.</span></div>
       <div class="rule"><img src="img/speech.png" alt=""><span>It says what it needs to. Nothing more.</span></div>
-      <div class="rule"><img src="img/moon.png" alt=""><span>It keeps civilized hours.</span></div>
+      <div class="rule"><img src="img/moon.png" alt=""><span>Civilized hours for applicants. On duty 24/7 for you.</span></div>
     </div>
+    <p class="fine reveal" style="margin-top:18px;max-width:520px">Applications are caught
+    around the clock. Someone applies at 11pm? They are first in line at 8:00am sharp,
+    exactly as texting law requires.</p>
   </div>
 </section>
 
-<section class="offer" id="offer">
-  <div class="wrap">
-    <div class="offer-card reveal">
-      <img class="offer-gift" src="img/gift.png" alt="">
-      <div>
-        <p class="label">Pricing</p>
-        <p class="big" style="margin-top:12px"><mark>$249 per hire.</mark> Everything else is $0.</p>
-        <p style="font-size:16px;margin:22px 0 8px;max-width:460px">Unlimited applicants,
-        texts, screenings, and bookings. You are billed once: when a caregiver works
-        their first shift.</p>
-        <p style="font-size:16px;margin:0 0 28px;max-width:460px;color:var(--mute)">It starts
-        with a 15-minute fit call and a refundable $49.</p>
-        <a class="btn btn-blue" href="mailto:kariwalbadal@gmail.com?subject=Ephoria%20fit%20call">Book a fit call</a>
-        <p class="fine">Decide not to continue? The $49 comes back. No questions.</p>
-      </div>
-      <div class="offer-img">
-        <img src="img/warmth.jpg" alt="A caregiver preparing a warm drink for a senior">
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="demo" style="padding-top:24px">
+<section id="demo">
   <div class="wrap demo-grid">
     <div class="reveal">
       <p class="label">Try it yourself</p>
       <h2>Apply like a <mark>caregiver</mark> would.</h2>
-      <p style="color:var(--mute);margin-top:16px;max-width:420px">Put your own number in.
+      <p style="color:var(--mute);margin-top:14px;max-width:420px">Put your own number in.
         Feel how fast your applicants would hear back.</p>
     </div>
     <form id="intake" class="reveal">
@@ -316,6 +308,25 @@ footer a:hover{color:var(--blue)}
       application. Reply STOP at any time to opt out. Message and data rates may apply.</p>
       <p id="form-note"></p>
     </form>
+  </div>
+</section>
+
+<section class="offer" id="offer">
+  <div class="wrap">
+    <div class="offer-card reveal">
+      <img class="offer-gift" src="img/gift.png" alt="">
+      <div>
+        <p class="label">Pricing</p>
+        <p class="big" style="margin-top:12px"><mark>$49</mark> to start. <mark>$249</mark> per hire. That's it.</p>
+        <p style="font-size:16px;margin:22px 0 28px;max-width:470px">The $49 books your
+        pilot after a 15-minute fit call, and comes back if you walk away. The $249 is
+        billed only when a caregiver works their first shift. Everything in between is $0.</p>
+        <a class="btn btn-blue" href="mailto:kariwalbadal@gmail.com?subject=Ephoria%20fit%20call">Book a fit call</a>
+      </div>
+      <div class="offer-img">
+        <img src="img/warmth.jpg" alt="A caregiver preparing a warm drink for a senior">
+      </div>
+    </div>
   </div>
 </section>
 
