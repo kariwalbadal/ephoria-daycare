@@ -120,7 +120,9 @@ h1 mark,h2 mark,.big mark{background:linear-gradient(180deg,transparent 55%,var(
 /* The number is always one short token, so every caption starts on the same
    baseline across all three columns — no wrapping to knock them out of line. */
 .money b{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(30px,3.2vw,42px);font-weight:800;display:block;line-height:1;letter-spacing:-.02em;white-space:nowrap}
-.money b i{font-style:normal;color:var(--yellow)}
+/* The qualifier rides at half size so "6 max" stays one line in a narrow column,
+   which is what keeps all three captions on a shared baseline. */
+.money b i{font-style:normal;color:var(--yellow);font-size:.5em;letter-spacing:0}
 .money p{font-size:13px;line-height:1.45;color:rgba(255,255,255,.66);margin-top:9px;max-width:210px}
 .money-foot{margin-top:30px;font-size:12px;color:rgba(255,255,255,.45);position:relative;z-index:2}
 
@@ -138,18 +140,40 @@ h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(
 .sec-head{max-width:640px;margin-bottom:26px}
 .sec-head p{color:var(--mute);margin-top:12px;font-size:14.5px;line-height:1.5;max-width:520px}
 
-/* how it works: dense vertical flow, continuous connector pulses (seamless: two
-   pulses per line, half-period apart, so the next begins before the last ends) */
-.flow{display:flex;flex-direction:column;align-items:center;max-width:290px;margin:0 auto;width:100%}
-.fnode{width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;text-align:center;box-shadow:0 4px 14px rgba(16,27,51,.05)}
-.fnode img{width:30px;height:30px;margin:0 auto 8px;display:block}
-.fnode b{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:700;display:block}
-.fnode p{font-size:12px;color:var(--mute);margin-top:2px}
-.fline{width:2px;height:34px;background:var(--line);border-radius:2px;position:relative;overflow:hidden;margin:6px auto}
-.fline::before,.fline::after{content:"";position:absolute;left:0;width:100%;top:-50%;height:50%;border-radius:2px;
-  background:linear-gradient(180deg,transparent,var(--blue),transparent);animation:dashv 1.4s linear infinite}
-.fline::after{animation-delay:.7s}
-@keyframes dashv{to{top:150%}}
+/* how it works: four steps on a shared rail. A signal walks the rail and lights
+   each step in turn — the cards carry a concrete artifact so they don't read as
+   empty boxes. */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;position:relative}
+.steps::before{content:"";position:absolute;top:44px;left:8%;right:8%;height:2px;
+  background:var(--line);border-radius:2px;z-index:0}
+/* the signal itself: a real element (not a pseudo) so its width is trivially
+   scriptable; absolutely positioned, so it sits out of the grid flow */
+.steps .rail{position:absolute;top:44px;left:8%;width:0;height:2px;border-radius:2px;z-index:0;
+  background:linear-gradient(90deg,var(--blue),#7DA0FF);transition:width .5s cubic-bezier(.4,0,.2,1)}
+.step{position:relative;z-index:1;background:var(--card);border:1.5px solid var(--line);
+  border-radius:16px;padding:18px 16px 16px;box-shadow:0 6px 18px rgba(16,27,51,.05);
+  transition:border-color .45s ease, box-shadow .45s ease, transform .45s ease}
+.step.on{border-color:var(--blue);box-shadow:0 16px 34px rgba(43,91,255,.16);transform:translateY(-5px)}
+.stephead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.stepnum{font-family:'Bricolage Grotesque',sans-serif;font-size:12px;font-weight:800;letter-spacing:.1em;
+  color:var(--mute);background:#F1F3F9;border-radius:20px;padding:4px 9px;transition:background .45s,color .45s}
+.step.on .stepnum{background:var(--blue);color:#fff}
+.stephead img{width:30px;height:30px;transition:transform .45s ease}
+.step.on .stephead img{transform:scale(1.14)}
+.step b{font-family:'Bricolage Grotesque',sans-serif;font-size:15.5px;font-weight:700;display:block;line-height:1.2}
+.step p{font-size:12.5px;color:var(--mute);margin-top:3px;line-height:1.4}
+/* the artifact strip: what the step actually produces */
+.art{margin-top:12px;padding-top:11px;border-top:1px dashed var(--line);min-height:44px;display:flex;
+  flex-wrap:wrap;gap:5px;align-items:center}
+.art i{font-style:normal;font-size:11px;line-height:1.3;opacity:.42;transition:opacity .45s ease}
+.step.on .art i{opacity:1}
+.art .chip{background:#EEF2FF;color:var(--blue);font-weight:700;padding:5px 10px;border-radius:20px}
+.art .chip.slot{background:rgba(15,157,88,.12);color:var(--green)}
+.art .bub{background:#F1F3F9;color:var(--ink);padding:6px 10px;border-radius:12px;border-bottom-left-radius:3px}
+.art.ticks{flex-direction:column;align-items:flex-start;gap:3px}
+.art.ticks i{display:flex;align-items:center;gap:6px;color:var(--ink)}
+.art.ticks i::before{content:"\2713";color:#fff;background:var(--green);border-radius:50%;
+  width:13px;height:13px;display:inline-flex;align-items:center;justify-content:center;font-size:8px;flex-shrink:0}
 
 /* three rules: plain statements */
 .rules{display:flex;flex-direction:column;gap:16px}
@@ -157,29 +181,27 @@ h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(
 .rule img{width:28px;height:28px;flex-shrink:0}
 .rule span{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(17px,2.1vw,23px);font-weight:600}
 
-/* offer — two cards: priced Standard, quote-on-call Custom */
+/* offer — two compact cards: one headline number each, everything else demoted */
 .offer{background:var(--bg)}
-.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:stretch}
-.pcard{background:var(--card);border:1.5px solid var(--line);border-radius:22px;padding:38px 34px;
-  box-shadow:0 24px 56px rgba(16,27,51,.08);display:flex;flex-direction:column}
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:stretch}
+.pcard{background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:26px 26px 24px;
+  box-shadow:0 18px 44px rgba(16,27,51,.07);display:flex;flex-direction:column}
 .pcard.featured{border:2px solid var(--blue)}
-.ptag{display:inline-block;align-self:flex-start;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;
-  font-weight:700;color:#fff;background:var(--blue);padding:5px 12px;border-radius:20px}
+.ptag{display:inline-block;align-self:flex-start;font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  font-weight:700;color:#fff;background:var(--blue);padding:4px 11px;border-radius:20px}
 .ptag.alt{background:var(--ink)}
-.plead{font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:600;line-height:1.3;margin:16px 0 4px}
-.prows{margin:18px 0 4px;border-top:1.5px solid var(--line)}
-.prow{display:flex;gap:18px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--line)}
-.prow b{font-family:'Bricolage Grotesque',sans-serif;font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1;white-space:nowrap}
-.prow b i{font-style:normal;font-size:15px;color:var(--mute);font-weight:700}
-.prow span{font-size:13px;color:var(--mute);line-height:1.4}
-.prow.quote b{color:var(--blue)}
-.pnote{font-size:13.5px;color:var(--mute);line-height:1.55;margin-top:auto;padding-top:6px}
-.pnote b{color:var(--ink)}
-.pcta{margin-top:22px;width:100%}
+.phero{margin:16px 0 14px}
+.phero b{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(38px,4.4vw,50px);font-weight:800;
+  line-height:1;letter-spacing:-.03em;display:block}
+.phero span{display:block;font-size:13px;color:var(--mute);margin-top:7px;line-height:1.35}
+.pmeta{font-size:13.5px;font-weight:600;padding:11px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.pcta{margin-top:auto;width:100%}
+.pfoot{text-align:center;font-size:13px;color:var(--mute);margin-top:20px}
+.pfoot b{color:var(--ink)}
 .big{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(38px,4.6vw,60px);font-weight:800;line-height:1.02;letter-spacing:-.025em}
-.offer-points{list-style:none;margin:22px 0 24px}
-.offer-points li{padding:9px 0;font-size:16px;display:flex;gap:12px;align-items:baseline}
-.offer-points li::before{content:"✓";color:#fff;background:var(--blue);border-radius:50%;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transform:translateY(3px)}
+.offer-points{list-style:none;margin:16px 0 20px}
+.offer-points li{padding:6px 0;font-size:14.5px;display:flex;gap:11px;align-items:baseline}
+.offer-points li::before{content:"\2713";color:#fff;background:var(--blue);border-radius:50%;min-width:19px;height:19px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;transform:translateY(3px);flex-shrink:0}
 
 /* interactive demo */
 .demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:start}
@@ -199,6 +221,7 @@ h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(
 .chip{background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:7px 13px;font-size:12.5px;font-family:inherit;color:var(--ink);cursor:pointer;transition:border .15s,transform .15s}
 .chip:hover{border-color:var(--blue);transform:translateY(-1px)}
 .chip:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.resetbtn{margin-top:18px;padding:10px 22px;font-size:14px;border-width:2px}
 
 /* operator panel — what the agency sees */
 .op{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 20px 44px rgba(16,27,51,.07)}
@@ -220,12 +243,11 @@ h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(
 .op-foot.hide{display:none}
 
 /* FAQ */
-/* Uniform rhythm: every row owns the same padding, and the first/last shed the
-   edge padding so the section's own padding is the only thing at the boundary. */
+/* Every row is identical, last one included. Dropping the final border made the
+   section's own padding read as part of that row, so it looked twice as tall. */
 .faq{padding:46px 0}
-.faq details{border-bottom:1px solid var(--line);padding:15px 0}
-.faq details:first-of-type{padding-top:0}
-.faq details:last-of-type{border-bottom:none;padding-bottom:0}
+.faq details{border-bottom:1px solid var(--line);padding:14px 0}
+.faq .sec-head{margin-bottom:10px}
 .faq summary{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:16px;line-height:1.3;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:16px;align-items:center}
 .faq summary::-webkit-details-marker{display:none}
 .faq summary::after{content:"+";color:var(--blue);font-size:22px;font-weight:700;flex-shrink:0;line-height:1}
@@ -250,6 +272,8 @@ footer a:hover{color:var(--blue)}
   .floaty{display:none}
   .demo-grid{gap:32px}
   .split{grid-template-columns:1fr;gap:36px}
+  .steps{grid-template-columns:1fr 1fr;gap:12px}
+  .steps::before{display:none}
   /* Supporting copy shrinks again on phones — a screenful of grey text is the
      fastest way to lose the reader before they reach the demo. */
   .sub{font-size:15px}
@@ -257,7 +281,6 @@ footer a:hover{color:var(--blue)}
   .money p{font-size:11.5px;max-width:none}
   .faq summary{font-size:15px}
   .faq p{font-size:13.5px}
-  .pnote{font-size:12.5px}
   .cite,.ctanote,.money-foot{font-size:11.5px}
   /* a 70px blur across a full-width card is the most expensive thing on the
      page to repaint; mobile gets a cheap shadow instead */
@@ -274,6 +297,8 @@ footer a:hover{color:var(--blue)}
 @media(prefers-reduced-motion:reduce){
   .js .reveal{opacity:1;transform:none;transition:none}
   .floaty{animation:none}
+  .step{transition:none}
+  .step .art i{opacity:1}
   .fline::before,.fline::after{animation:none;display:none}
 }
 </style>
@@ -360,39 +385,50 @@ footer a:hover{color:var(--blue)}
 <div class="money">
   <div class="wrap money-grid">
     <div class="mcard reveal"><img src="img/bolt.png" alt="">
-      <div><b>60<i>s</i></b><p>to the first text. 8am&ndash;9pm local, never outside it.</p></div></div>
+      <div><b>60<i>s</i></b><p>to the first text. 8am&ndash;9pm local.</p></div></div>
     <div class="mcard reveal"><img src="img/speech.png" alt="">
-      <div><b>6</b><p>screening questions, max. Yours, not ours.</p></div></div>
+      <div><b>6<i> max</i></b><p>screening questions. Yours, not ours.</p></div></div>
     <div class="mcard reveal"><img src="img/hourglass.png" alt="">
-      <div><b>2</b><p>nudges if they go quiet. Then silence, for good.</p></div></div>
+      <div><b>2<i> only</i></b><p>nudges if they go quiet, then silence.</p></div></div>
   </div>
-  <div class="wrap money-foot">Hard limits written into the software. Not targets.</div>
+  <div class="wrap money-foot">Hard limits in the software. Not targets.</div>
 </div>
 
 <section id="how">
-  <div class="wrap split">
-    <div class="sec-head reveal" style="margin-bottom:0">
+  <div class="wrap">
+    <div class="sec-head reveal" style="max-width:560px">
       <p class="label">How it works</p>
       <h2>Hiring runs itself, <mark>while you run the agency.</mark></h2>
-      <p>Plugs into wherever your applicants already come from. You keep posting jobs exactly as you do today.</p>
+      <p>Plugs into wherever your applicants already come from.</p>
     </div>
-    <div class="flow reveal">
-      <div class="fnode">
-        <img src="img/speech.png" alt="">
+
+    <div class="steps reveal" id="steps">
+      <span class="rail" aria-hidden="true"></span>
+      <div class="step">
+        <div class="stephead"><span class="stepnum">01</span><img src="img/speech.png" alt=""></div>
         <b>They apply</b>
         <p>Indeed, your site, anywhere</p>
+        <div class="art"><i class="chip">New application</i></div>
       </div>
-      <div class="fline"></div>
-      <div class="fnode">
-        <img src="img/bolt.png" alt="">
-        <b>Screened, instantly</b>
-        <p>Your questions. Your bar.</p>
+      <div class="step">
+        <div class="stephead"><span class="stepnum">02</span><img src="img/bolt.png" alt=""></div>
+        <b>Texted in 60s</b>
+        <p>Before they take another call</p>
+        <div class="art"><i class="bub">Hi &mdash; this is Sunrise Home Care&hellip;</i></div>
       </div>
-      <div class="fline"></div>
-      <div class="fnode">
-        <img src="img/calendar.png" alt="">
-        <b>Followed through</b>
-        <p>Booked, reminded, nudged to day one.</p>
+      <div class="step">
+        <div class="stephead"><span class="stepnum">03</span><img src="img/handshake.png" alt=""></div>
+        <b>Screened to your bar</b>
+        <p>Your questions, not ours</p>
+        <div class="art ticks">
+          <i>Availability</i><i>Transport</i><i>CNA, 3 yrs</i>
+        </div>
+      </div>
+      <div class="step">
+        <div class="stephead"><span class="stepnum">04</span><img src="img/calendar.png" alt=""></div>
+        <b>Booked and reminded</b>
+        <p>Nudged through to day one</p>
+        <div class="art"><i class="chip slot">Tue, 2:00 PM</i></div>
       </div>
     </div>
   </div>
@@ -448,11 +484,7 @@ footer a:hover{color:var(--blue)}
           <div class="op-row"><span>Preferred call time</span><em class="empty" data-k="callback">—</em></div>
           <div class="op-foot hide" id="op-foot"></div>
         </div>
-        <p style="font-size:13px;color:var(--mute);margin-top:16px;line-height:1.5">
-          The same logic production runs. The live version adds a language model for
-          messier replies, and books into your real calendar.
-          <button id="d-reset" class="chip" style="margin-left:4px">Start over</button>
-        </p>
+        <button id="d-reset" class="btn btn-ghost resetbtn">Start over</button>
       </div>
     </div>
   </div>
@@ -477,60 +509,42 @@ footer a:hover{color:var(--blue)}
 
 <section class="offer" id="offer">
   <div class="wrap">
-    <div class="sec-head reveal" style="max-width:680px">
+    <div class="sec-head reveal" style="max-width:560px">
       <p class="label">Pricing</p>
-      <h2>You only pay while <mark>someone is actually working.</mark></h2>
-      <p>No seat licences. No minimums. Nothing for applicants who ghost or never start.</p>
+      <h2>You pay while they're <mark>working. Not before.</mark></h2>
     </div>
 
     <div class="pricing-grid">
       <div class="pcard featured reveal">
         <p class="ptag">Standard</p>
-        <p class="plead">Everything the screener does, on your applicants, from day one.</p>
-
-        <div class="prows">
-          <div class="prow"><b>$1,500</b><span>one-time setup<br>carrier registration, your number, your questions, your intake</span></div>
-          <div class="prow"><b>$299<i>/mo</i></b><span>support base<br>starts only when your first caregiver starts</span></div>
-          <div class="prow"><b>$149<i>/mo</i></b><span>per placed caregiver<br>only while they're still working</span></div>
+        <div class="phero">
+          <b>$149</b>
+          <span>per working caregiver, per month</span>
         </div>
-
+        <p class="pmeta">Plus $1,500 setup and $299/mo support</p>
         <ul class="offer-points">
-          <li><span>Billing stops the day a caregiver stops working</span></li>
-          <li><span><b>We stop charging for a caregiver after 12 months</b> &mdash; then they're yours, free</span></li>
-          <li><span>No seat licences, no minimums, no annual contract</span></li>
-          <li><span>$1,500 refunded if your first 30 days don't produce 5 screened, qualified candidates</span></li>
+          <li><span>Stops the day they stop working</span></li>
+          <li><span>Free after 12 months</span></li>
         </ul>
-
-        <p class="pnote">$149 is <b>3.3%</b> of what a full-time caregiver bills you.
-        You keep 97 cents on the dollar.</p>
-
-        <a class="btn btn-blue pcta" href="mailto:kariwalbadal@gmail.com?subject=Ephoria%20fit%20call&amp;body=Which%20agency%3A%20%0AWhere%3A%20%0AOpen%20roles%20right%20now%3A%20%0AWhat%27s%20breaking%20in%20hiring%20right%20now%3A%20%0ABest%20time%20for%2015%20minutes%3A%20">Book a fit call</a>
-        <p class="ctanote">Opens an email. Send your agency name; I'll reply with times today.</p>
+        <a class="btn btn-blue pcta" href="mailto:kariwalbadal@gmail.com?subject=Ephoria%20fit%20call&amp;body=Which%20agency%3A%20%0AWhere%3A%20%0AOpen%20roles%20right%20now%3A%20%0ABest%20time%20for%2015%20minutes%3A%20">Book a fit call</a>
       </div>
 
       <div class="pcard reveal">
         <p class="ptag alt">Custom</p>
-        <p class="plead">Built around how you actually run, instead of the regular option.</p>
-
-        <div class="prows">
-          <div class="prow quote"><b>Let's talk</b><span>scoped and priced on the call, for your agency</span></div>
+        <div class="phero">
+          <b>Let's talk</b>
+          <span>scoped and priced on the call</span>
         </div>
-
+        <p class="pmeta">Built around how your agency actually runs</p>
         <ul class="offer-points">
           <li><span>Everything in Standard</span></li>
-          <li><span>Missed calls caught and turned into the same screening conversation</span></li>
-          <li><span>Your own intake steps, extra questions, a second language</span></li>
-          <li><span>Your candidates delivered the way your scheduler already works</span></li>
-          <li><span>Ongoing maintenance of your custom pieces included</span></li>
+          <li><span>Missed calls, your intake, your bar</span></li>
         </ul>
-
-        <p class="pnote"><b>Recommended, not upsold.</b> The agencies that get the most from
-        this fit it to their workflow. Tell us what's awkward about yours.</p>
-
-        <a class="btn btn-ghost pcta" href="mailto:kariwalbadal@gmail.com?subject=Ephoria%20custom%20setup&amp;body=Which%20agency%3A%20%0AWhere%3A%20%0AWhat%27s%20awkward%20about%20how%20hiring%20works%20for%20us%20today%3A%20%0ABest%20time%20for%2015%20minutes%3A%20">Talk to us about custom</a>
-        <p class="ctanote">Scoped and quoted before anything starts.</p>
+        <a class="btn btn-ghost pcta" href="mailto:kariwalbadal@gmail.com?subject=Ephoria%20custom%20setup&amp;body=Which%20agency%3A%20%0AWhat%27s%20awkward%20about%20hiring%20for%20us%20today%3A%20%0ABest%20time%20for%2015%20minutes%3A%20">Talk to us</a>
       </div>
     </div>
+
+    <p class="pfoot">$149 is <b>3.3%</b> of what a full-time caregiver bills you. You keep the other 97 cents.</p>
   </div>
 </section>
 
@@ -541,55 +555,55 @@ footer a:hover{color:var(--blue)}
     </div>
     <div class="reveal">
       <details>
-        <summary>Turnover is 75%. What happens when a caregiver I paid for quits?</summary>
+        <summary>Do I pay again when they quit?</summary>
         <p><b>You stop paying for them that day.</b> A caregiver who leaves after six weeks
         costs you about $220, not a placement fee. Around 70% of new hires leave within 100
         days — so we'd rather be paid for the ones who stay.</p>
       </details>
       <details>
-        <summary>So I pay $149 a month forever for someone I hired once?</summary>
+        <summary>Do I pay forever for one hire?</summary>
         <p>No. <b>We stop charging after 12 months</b> — then they're yours, free. That caps
         one caregiver at $1,788, against the $1,500–$3,000 agencies typically spend per hire
         today. Most cost far less, because billing ends when they leave.</p>
       </details>
       <details>
-        <summary>What do I actually see? Do I have to learn new software?</summary>
+        <summary>What do I actually see?</summary>
         <p>No dashboard to log into. You get the record shown in the demo above — answers,
         transcript, booked time — by email, text, or a shared sheet. Whatever you already use.</p>
       </details>
       <details>
-        <summary>Whose phone number does it text from?</summary>
+        <summary>Whose phone number is it?</summary>
         <p>One we register and operate for your agency, carrier-approved for business
         messaging. You never deal with carrier registration — it's slow and unpleasant, and
         it's the part we absorb.</p>
       </details>
       <details>
-        <summary>Does it work with Indeed / my ATS / my careers page?</summary>
+        <summary>Does it work with Indeed?</summary>
         <p>Yes — Indeed, your website form, a spreadsheet, a forwarded email. We build the
         connector for your setup during the pilot. You keep posting jobs exactly as you do today.</p>
       </details>
       <details>
-        <summary>What happens when it doesn't understand someone?</summary>
+        <summary>What if it doesn't understand?</summary>
         <p>It stops guessing. After two unclear replies — or the moment someone asks for a
         person — it stops, takes a good time to call them, and hands you the transcript.
         <b>It never invents an answer about pay, hours, or clients.</b> Try it above: type
         "banana" twice, or ask for a real person.</p>
       </details>
       <details>
-        <summary>What about applicants who call instead of texting? We miss a lot of calls.</summary>
+        <summary>What about people who call?</summary>
         <p>Usually the bigger leak — a missed call at 4pm Friday is gone. We can put a number
         in front of it that catches the call, texts them straight back, and runs the same
         screening conversation. <b>It's a custom piece, not a checkbox</b>: it depends on your
         phone setup, so we scope and quote it on the call.</p>
       </details>
       <details>
-        <summary>My agency does things differently. Can it be built around us?</summary>
+        <summary>Can it fit how we work?</summary>
         <p>That's the normal case, not the exception. A different bar, an extra compliance
         question, Spanish-speaking applicants, everything in one morning email — all buildable.
         We'd rather fit the software to you than ask your team to change. Quoted on the call.</p>
       </details>
       <details>
-        <summary>Is this a bot pretending to be a person?</summary>
+        <summary>Is it pretending to be human?</summary>
         <p>No, and it never will be. The first message says it's the automated scheduling
         assistant for your agency. Anyone who asks is told plainly.</p>
       </details>
@@ -1006,6 +1020,27 @@ document.getElementById("d-reset").addEventListener("click", ()=>{
   document.getElementById("demo").scrollIntoView({behavior:"smooth", block:"start"});
 });
 dReset();
+
+/* ---------- how it works: walk the signal along the rail ---------- */
+const stepEls = [...document.querySelectorAll("#steps .step")];
+const stepRail = document.getElementById("steps");
+if (REDUCED){
+  stepEls.forEach(el=>el.classList.add("on"));
+  stepRail.querySelector(".rail").style.width = "84%";
+} else {
+  const railFill = stepRail.querySelector(".rail");
+  let si = 0, stepTimer = null;
+  const advance = ()=>{
+    stepEls.forEach((el,i)=>el.classList.toggle("on", i === si));
+    railFill.style.width = ((si + 1) / stepEls.length * 84).toFixed(2) + "%";
+    si = (si + 1) % stepEls.length;
+    if (si === 0) setTimeout(()=>{ if (si === 0) railFill.style.width = "0%"; }, 1000);
+  };
+  new IntersectionObserver(es=>{
+    if (es[0].isIntersecting && !stepTimer){ advance(); stepTimer = setInterval(advance, 1500); }
+    else if (!es[0].isIntersecting && stepTimer){ clearInterval(stepTimer); stepTimer = null; }
+  }, {threshold:.25}).observe(stepRail);
+}
 
 /* ---------- scroll reveal + failsafe ---------- */
 const io = new IntersectionObserver(es=>es.forEach(e=>{
