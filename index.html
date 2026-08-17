@@ -3,8 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ephoria</title>
-<meta name="description" content="Home care agencies turn away clients because they cannot staff them. Ephoria answers every caregiver applicant in 60 seconds, screens them by text, and books interviews into your calendar.">
+<title>Ephoria — Caregiver hiring that answers in 60 seconds</title>
+<meta name="description" content="Home care agencies turn away clients they cannot staff. Ephoria texts every caregiver applicant the moment they apply, screens them against your bar, and books interviews on your calendar.">
+<link rel="canonical" href="https://ephoria.io/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ephoria.io/">
+<meta property="og:site_name" content="Ephoria">
+<meta property="og:title" content="Caregiver hiring that answers in 60 seconds">
+<meta property="og:description" content="Every applicant answered, screened and booked by text — before the agency down the road picks up the phone.">
+<meta property="og:image" content="https://ephoria.io/img/warmth.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Caregiver hiring that answers in 60 seconds">
+<meta name="twitter:description" content="Every applicant answered, screened and booked by text — before the agency down the road picks up the phone.">
+<meta name="twitter:image" content="https://ephoria.io/img/warmth.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M8 6h32a6 6 0 0 1 6 6v18a6 6 0 0 1-6 6H22l-9 8v-8H8a6 6 0 0 1-6-6V12a6 6 0 0 1 6-6z' fill='%232B5BFF'/%3E%3Cpath d='M27 10 15 26h7l-2 12 12-16h-7l2-12z' fill='%23FFC531'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,6 +29,7 @@
   --blue-d:#1E42C8;
   --yellow:#FFC531;
   --coral:#FF6B4A;
+  --green:#0F9D58;
   --card:#FFFFFF;
   --mute:#5A6478;
   --line:rgba(16,27,51,.10);
@@ -30,6 +42,9 @@ body{background:var(--bg);color:var(--ink);font-family:'Figtree',system-ui,sans-
 .wrap{max-width:1140px;margin:0 auto;padding:0 24px}
 .label{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);font-weight:700;margin-bottom:12px}
 img.emo{display:inline-block;vertical-align:middle}
+.skip{position:absolute;left:-9999px;top:0;background:var(--blue);color:#fff;padding:12px 18px;border-radius:0 0 10px 0;z-index:100;font-weight:700}
+.skip:focus{left:0}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:4px}
 
 /* nav + logo */
 nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(253,251,246,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
@@ -49,56 +64,63 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 
 /* hero */
 .hero{padding:122px 0 56px;position:relative}  /* 66px fixed nav + 56px = same visual gap as every section */
-.hero .fcards{margin:0}
 .stage{margin:0 auto;position:relative}
-h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(40px,5.2vw,66px);line-height:1.02;letter-spacing:-.025em;margin:0 0 22px}
-h1 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);color:inherit;padding:0 2px}
-.sub{font-size:18px;color:var(--mute);max-width:500px;margin-bottom:30px}
+h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(38px,4.8vw,60px);line-height:1.03;letter-spacing:-.025em;margin:0 0 20px}
+h1 mark,h2 mark,.big mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);color:inherit;padding:0 2px}
+.sub{font-size:17.5px;color:var(--mute);max-width:520px;margin-bottom:28px}
 .sub b{color:var(--ink)}
-.hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.ctanote{font-size:13px;color:var(--mute);margin-top:14px}
 
 /* phone + floaters */
 .stage{position:relative;width:fit-content;margin:0 auto}
 .floaty{position:absolute;filter:drop-shadow(0 10px 18px rgba(16,27,51,.18));animation:bob 3.6s ease-in-out infinite;z-index:3}
 @keyframes bob{0%,100%{transform:translateY(0) rotate(var(--tilt,0deg))}50%{transform:translateY(-12px) rotate(var(--tilt,0deg))}}
-.phone{width:300px;background:var(--ink);border-radius:36px;padding:12px;box-shadow:0 34px 70px rgba(16,27,51,.28)}
-.phone-screen{background:#F6F7FB;border-radius:26px;overflow:hidden;display:flex;flex-direction:column;height:540px}
-.phone-top{padding:13px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;background:#fff}
+/* translateZ promotes the phone to its own compositor layer. Without it, every
+   appended message forces the 70px-blur shadow to repaint, which strobes along
+   the edges on mobile GPUs. */
+.phone{width:300px;background:var(--ink);border-radius:36px;padding:12px;box-shadow:0 34px 70px rgba(16,27,51,.28);
+  transform:translateZ(0);backface-visibility:hidden}
+.phone-screen{background:#F6F7FB;border-radius:26px;overflow:hidden;display:flex;flex-direction:column;height:520px}
+.phone-top{padding:13px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;background:#fff;flex-shrink:0}
 .avatar{width:34px;height:34px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:14px}
 .phone-top small{display:block;color:var(--mute);font-size:11px}
 .phone-top b{font-size:13px;font-weight:700}
 .thread{flex:1;padding:16px 13px;display:flex;flex-direction:column;gap:9px;overflow:hidden;justify-content:flex-end;overflow-anchor:none}
-.msg{max-width:84%;padding:9px 13px;border-radius:15px;font-size:13.5px;line-height:1.45;opacity:0;transform:translateY(10px);transition:opacity .4s ease,transform .4s ease}
+.msg{max-width:84%;padding:9px 13px;border-radius:15px;font-size:13.5px;line-height:1.45;opacity:0;transform:translateY(10px);transition:opacity .4s ease,transform .4s ease;word-wrap:break-word}
 .msg.show{opacity:1;transform:none}
 .msg.out{align-self:flex-start;background:#fff;color:var(--ink);border:1px solid var(--line);border-bottom-left-radius:4px}
 .msg.in{align-self:flex-end;background:var(--blue);color:#fff;border-bottom-right-radius:4px}
-.msg.sys{align-self:center;background:none;color:var(--mute);font-size:11px;padding:2px}
+.msg.sys{align-self:center;background:none;color:var(--mute);font-size:11px;padding:2px;text-align:center;max-width:96%}
 .typing{display:inline-flex;gap:4px;align-items:center}
 .typing i{width:6px;height:6px;border-radius:50%;background:var(--mute);animation:blink 1.2s infinite}
 .typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
 @keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
 
-/* industry facts */
-.facts{padding:54px 0 0}
-.fcards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:520px}
-.fcard{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:14px;transition:transform .2s ease, box-shadow .2s ease;display:flex;flex-direction:column}
-.fcard:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(16,27,51,.10)}
-.fcard b{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(24px,2.4vw,32px);font-weight:800;line-height:1;display:block;letter-spacing:-.02em}
-.fcard b i{font-style:normal;color:var(--blue)}
-.fcard p{font-size:12.5px;color:var(--ink);margin:8px 0 6px;line-height:1.35}
-.fcard small{font-size:10.5px;color:var(--mute);line-height:1.3;display:block;margin-top:auto}
-
+/* cost calculator */
+.calc{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:26px;box-shadow:0 20px 44px rgba(16,27,51,.07)}
+.calc-row{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.calc-row label{font-size:13.5px;font-weight:600}
+.calc-row input{width:100%;background:#F6F7FB;border:2px solid var(--line);color:var(--ink);
+  padding:12px 15px;font-size:16px;font-weight:600;font-family:inherit;border-radius:11px;outline:none;
+  transition:border .18s,background .18s}
+.calc-row input:focus{border-color:var(--blue);background:#fff}
+.calc-out{border-top:1.5px solid var(--line);padding-top:18px;margin-top:4px}
+.calc-out small{font-size:12.5px;color:var(--mute);display:block;margin-bottom:4px}
+.calc-out b{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(34px,4.2vw,48px);font-weight:800;line-height:1.05;letter-spacing:-.02em;display:block;color:var(--ink)}
+.calc-out b i{font-style:normal;color:var(--blue)}
+.calc-note{font-size:12.5px;color:var(--mute);margin-top:12px;line-height:1.45}
+.cite{font-size:12px;color:var(--mute);line-height:1.4;display:block;margin-top:16px}
 
 /* money strip */
 .money{background:var(--ink);color:#fff;padding:56px 0;position:relative;overflow:hidden}
 .money-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;position:relative;z-index:2}
 .mcard{display:flex;gap:18px;align-items:flex-start}
-.mcard img{width:52px;height:52px;animation:bob 4s ease-in-out infinite}
-.mcard:nth-child(2) img{animation-delay:.6s}
-.mcard:nth-child(3) img{animation-delay:1.2s}
-.money b{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(32px,3.4vw,48px);font-weight:800;display:block;line-height:1.05;letter-spacing:-.02em}
+.mcard img{width:52px;height:52px}
+.money b{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(28px,3.2vw,42px);font-weight:800;display:block;line-height:1.05;letter-spacing:-.02em}
 .money b i{font-style:normal;color:var(--yellow)}
-.money p{font-size:14px;color:rgba(255,255,255,.66);margin-top:8px;max-width:230px}
+.money p{font-size:14px;color:rgba(255,255,255,.66);margin-top:8px;max-width:250px}
+.money-foot{margin-top:34px;font-size:13px;color:rgba(255,255,255,.5);position:relative;z-index:2}
 
 /* sections: uniform rhythm, strict color alternation (cream / white / sky / navy).
    INVARIANT: padding is the ONLY spacing allowed to touch a section edge —
@@ -108,11 +130,11 @@ section{padding:56px 0}
 .wrap > :last-child, .split > * > :last-child, .split > :last-child{margin-bottom:0}
 /* two-column grammar: text left, visual right */
 .split{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
-.problem,.ruleband{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.problem,.ruleband,.faq{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .band-sky{background:#EEF2FF}
 h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(30px,3.6vw,46px);line-height:1.06;margin-top:0;letter-spacing:-.02em}
-h2 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);color:inherit;padding:0 2px}
 .sec-head{max-width:640px;margin-bottom:26px}
+.sec-head p{color:var(--mute);margin-top:14px;font-size:17px}
 
 /* how it works: dense vertical flow, continuous connector pulses (seamless: two
    pulses per line, half-period apart, so the next begins before the last ends) */
@@ -130,85 +152,149 @@ h2 mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);col
 /* three rules: plain statements */
 .rules{display:flex;flex-direction:column;gap:16px}
 .rule{display:flex;gap:14px;align-items:center}
-.rule img{width:28px;height:28px}
-.rule span{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(18px,2.2vw,24px);font-weight:600}
+.rule img{width:28px;height:28px;flex-shrink:0}
+.rule span{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(17px,2.1vw,23px);font-weight:600}
 
 /* offer */
 .offer{background:var(--bg)}
 .offer-card{background:var(--card);border:1.5px solid var(--line);border-radius:24px;padding:60px;display:grid;grid-template-columns:1.1fr .9fr;gap:52px;align-items:center;box-shadow:0 30px 70px rgba(16,27,51,.10);position:relative;overflow:visible}
-.offer-gift{position:absolute;top:-34px;left:52px;width:76px;filter:drop-shadow(0 12px 22px rgba(16,27,51,.2));animation:bob 3.4s ease-in-out infinite}
-.big{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(40px,4.8vw,64px);font-weight:800;line-height:1.02;letter-spacing:-.025em}
-.big mark{background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%);color:inherit;padding:0 3px}
+.big{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(38px,4.6vw,60px);font-weight:800;line-height:1.02;letter-spacing:-.025em}
 .offer-points{list-style:none;margin:26px 0 32px}
 .offer-points li{padding:9px 0;font-size:16px;display:flex;gap:12px;align-items:baseline}
 .offer-points li::before{content:"✓";color:#fff;background:var(--blue);border-radius:50%;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transform:translateY(3px)}
+.custom-note{background:#EEF2FF;border:1.5px solid rgba(43,91,255,.22);border-radius:14px;padding:18px 20px;margin:0 0 28px;font-size:14.5px;line-height:1.55;color:#25324f}
+.custom-note b{display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:16px;margin-bottom:6px;color:var(--ink)}
 .offer-img{border-radius:var(--r);overflow:hidden}
 .offer-img img{width:100%;aspect-ratio:4/3;height:auto;object-fit:cover;object-position:center 35%;display:block;filter:saturate(.88)}
 
-/* demo */
-.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
-input{width:100%;background:#fff;border:2px solid var(--line);color:var(--ink);padding:15px 18px;font-size:15px;font-family:inherit;border-radius:12px;outline:none;transition:border .2s}
-input:focus{border-color:var(--blue)}
-input::placeholder{color:var(--mute)}
-form .btn{width:100%;border:none;font-size:15px;margin-top:14px}
-.fine{font-size:12px;color:var(--mute);margin-top:14px;line-height:1.6}
-#form-note{margin-top:16px;font-size:14px;color:var(--blue);display:none;font-weight:600}
+/* interactive demo */
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:start}
+.demo-phone{margin:0 auto}
+/* overscroll-behavior stops the inner scroll from chaining to the page once the
+   thread bottoms out — that chaining is what makes the section jump on touch. */
+.demo-phone .thread{justify-content:flex-start;overflow-y:auto;overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;contain:layout paint}
+.composer{display:flex;gap:8px;padding:10px;background:#fff;border-top:1px solid var(--line);flex-shrink:0}
+/* 16px is load-bearing: iOS Safari zooms the entire viewport when a focused
+   input is under 16px, which is what "the mobile view breaks" looks like. */
+.composer input{flex:1;background:#F6F7FB;border:1.5px solid var(--line);border-radius:20px;padding:8px 14px;font-size:16px;font-family:inherit;color:var(--ink);outline:none;min-width:0}
+.composer input:focus{border-color:var(--blue);background:#fff}
+.composer button{background:var(--blue);color:#fff;border:none;border-radius:50%;width:36px;height:36px;font-size:16px;cursor:pointer;flex-shrink:0;font-weight:700;line-height:1}
+.composer button:disabled{background:#B9C2D8;cursor:not-allowed}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:7px 13px;font-size:12.5px;font-family:inherit;color:var(--ink);cursor:pointer;transition:border .15s,transform .15s}
+.chip:hover{border-color:var(--blue);transform:translateY(-1px)}
+.chip:disabled{opacity:.45;cursor:not-allowed;transform:none}
 
-footer{border-top:1px solid var(--line);padding:22px 0;font-size:13px;color:var(--mute)}
+/* operator panel — what the agency sees */
+.op{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 20px 44px rgba(16,27,51,.07)}
+.op-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:14px;border-bottom:1.5px solid var(--line);margin-bottom:4px}
+.op-head b{font-family:'Bricolage Grotesque',sans-serif;font-size:16px}
+.op-head small{color:var(--mute);font-size:11.5px;display:block;font-weight:500}
+.pill{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 11px;border-radius:20px;white-space:nowrap;background:#EEF2FF;color:var(--blue)}
+.pill.ok{background:rgba(15,157,88,.12);color:var(--green)}
+.pill.no{background:rgba(255,107,74,.14);color:#C2410C}
+.pill.flag{background:rgba(255,197,49,.22);color:#8A6100}
+.op-row{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13.5px;align-items:baseline}
+.op-row:last-of-type{border-bottom:none}
+.op-row span{color:var(--mute);flex-shrink:0}
+.op-row em{font-style:normal;font-weight:600;text-align:right;color:var(--ink)}
+.op-row em.empty{color:#B9C2D8;font-weight:400}
+.op-foot{margin-top:14px;padding-top:14px;border-top:1.5px solid var(--line);font-size:13px;line-height:1.5}
+.op-foot.book{color:var(--green);font-weight:600}
+.op-foot.flagged{color:#8A6100;font-weight:600}
+.op-foot.hide{display:none}
+
+/* FAQ */
+.faq details{border-bottom:1px solid var(--line);padding:18px 0}
+.faq details:last-child{border-bottom:none}
+.faq summary{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:17.5px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:16px;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";color:var(--blue);font-size:24px;font-weight:700;flex-shrink:0;line-height:1}
+.faq details[open] summary::after{content:"–"}
+.faq p{color:var(--mute);font-size:15.5px;margin-top:12px;max-width:760px}
+.faq p b{color:var(--ink)}
+
+footer{border-top:1px solid var(--line);padding:26px 0;font-size:13px;color:var(--mute);background:var(--bg)}
 footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
 footer a{color:var(--ink);text-decoration:none;font-weight:600}
 footer a:hover{color:var(--blue)}
+.foot-links{display:flex;gap:18px;flex-wrap:wrap}
 
 .js .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
 .js .reveal.on{opacity:1;transform:none}
 
 @media(max-width:900px){
-  .offer-card,.demo-grid{grid-template-columns:1fr}
+  .offer-card,.demo-grid,.calc-grid{grid-template-columns:1fr}
   section,.money{padding-top:51px;padding-bottom:51px}
   .hero{padding-top:117px;padding-bottom:51px}  /* 66px nav + 51px */
-  .offer-card{padding:60px 26px 36px}
+  .offer-card{padding:44px 26px 36px}
   .floaty{display:none}
-  /* fact cards: 2x2 grid on mobile; flow runs vertically */
-  .fcards{grid-template-columns:repeat(2,1fr)}
-  .demo-grid{gap:26px}
+  .demo-grid{gap:32px}
   .split{grid-template-columns:1fr;gap:36px}
+  /* a 70px blur across a full-width card is the most expensive thing on the
+     page to repaint; mobile gets a cheap shadow instead */
+  .phone{box-shadow:0 12px 26px rgba(16,27,51,.20)}
+  .phone-screen{height:min(520px, 62vh)}
   /* money stats centered in their cards */
-  .mcard{align-items:center;text-align:center}
+  .mcard{align-items:center;text-align:center;flex-direction:column;gap:8px}
   .money-grid{grid-template-columns:repeat(3,1fr);gap:14px}
-  .mcard{flex-direction:column;gap:8px}
   .mcard img{width:36px;height:36px}
-  .money b{font-size:24px}
+  .money b{font-size:22px}
   .money p{font-size:11.5px}
+  .money-foot{text-align:center;margin-top:26px}
 }
 @media(prefers-reduced-motion:reduce){
   .js .reveal{opacity:1;transform:none;transition:none}
-  .floaty,.mcard img,.offer-gift{animation:none}
+  .floaty,.offer-gift{animation:none}
+  .fline::before,.fline::after{animation:none;display:none}
 }
 </style>
 </head>
 <body>
 
+<a class="skip" href="#main">Skip to content</a>
+
 <nav>
   <div class="wrap">
-    <a class="logo" href="#">
+    <a class="logo" href="#" aria-label="Ephoria home">
       <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 6h32a6 6 0 0 1 6 6v18a6 6 0 0 1-6 6H22l-9 8v-8H8a6 6 0 0 1-6-6V12a6 6 0 0 1 6-6z" fill="#2B5BFF"/><path d="M27 10 15 26h7l-2 12 12-16h-7l2-12z" fill="#FFC531"/></svg>
       <b>ephoria</b>
     </a>
-    <a class="btn btn-blue" href="mailto:kariwalbadal@gmail.com?subject=Ephoria%20fit%20call" style="padding:11px 20px;font-size:14px">Book a fit call</a>
+    <a class="btn btn-blue" href="#demo" style="padding:11px 20px;font-size:14px">Try the screener</a>
   </div>
 </nav>
+
+<main id="main">
 
 <header class="hero">
   <div class="wrap split">
     <div>
       <p class="label">For home care agency owners</p>
-      <h1>Turning away one client costs you <mark>$60,000 a year.</mark></h1>
+      <h1>Answer every caregiver applicant in <mark>60 seconds.</mark> Screen them. Book them.</h1>
+      <p class="sub">Your applicants apply to ten agencies at once and take the first
+      real conversation they get. Ephoria texts them the moment they apply, asks the
+      questions you'd ask, and puts the ones who pass <b>on your calendar</b> — while
+      you're on a client visit.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-blue" href="#demo">Try the screener yourself</a>
+        <a class="btn btn-ghost" href="#offer">See pricing</a>
+      </div>
+      <p class="ctanote">No signup. It runs right here in your browser.</p>
     </div>
-    <div class="fcards reveal">
-      <div class="fcard"><b>75<i>%</i></b><p>median caregiver turnover across home care</p><small>Activated Insights 2025 Benchmarking Report</small></div>
-      <div class="fcard"><b>54<i>%</i></b><p>of applicants never even get a callback</p><small>HelloHire industry data, 2026</small></div>
-      <div class="fcard"><b>2<i>x</i></b><p>the show-up rate when interviews book same day</p><small>HelloHire interview speed benchmark</small></div>
-      <div class="fcard"><b>10<i>–20</i></b><p>agencies every caregiver applies to at once</p><small>HelloHire industry data, 2026</small></div>
+    <div class="stage">
+      <img class="floaty" src="img/bolt.png" alt="" width="58" style="--tilt:-8deg;top:-24px;left:-46px">
+      <img class="floaty" src="img/speech.png" alt="" width="54" style="--tilt:6deg;top:130px;right:-52px;animation-delay:.8s">
+      <img class="floaty" src="img/calendar.png" alt="" width="60" style="--tilt:-5deg;bottom:50px;left:-56px;animation-delay:1.5s">
+      <div class="phone" aria-hidden="true">
+        <div class="phone-screen">
+          <div class="phone-top">
+            <div class="avatar">S</div>
+            <div><b>Sunrise Home Care</b><small>automated screening · sample</small></div>
+          </div>
+          <div class="thread" id="thread"></div>
+        </div>
+      </div>
     </div>
   </div>
 </header>
@@ -216,42 +302,45 @@ footer a:hover{color:var(--blue)}
 <section class="problem">
   <div class="wrap split">
     <div class="reveal">
-      <h2>You are not short on applicants. You are short on caregivers <mark>who never heard back.</mark></h2>
-      <p style="color:var(--mute);margin-top:18px;font-size:17px;max-width:560px">Every agency
-      has this problem. Almost nobody fixes it. <b style="color:var(--ink)">Ephoria answers every
-      applicant, screens them against the bar you set,</b> and fills your calendar with
-      interviews. You staff the clients you used to decline.</p>
-      <div class="hero-ctas" style="margin-top:28px">
-        <a class="btn btn-blue" href="mailto:kariwalbadal@gmail.com?subject=Ephoria%20fit%20call">Book a fit call</a>
-        <a class="btn btn-ghost" href="#offer">See pricing</a>
-      </div>
+      <h2>You are not short on applicants. You are short on the ones who <mark>never heard back.</mark></h2>
+      <p style="color:var(--mute);margin-top:18px;font-size:17px;max-width:560px">Applications
+      pile up for three days because nobody has an hour to work the phone. By the time
+      you call, they've started somewhere else — and you turn down the client you
+      could have staffed with them.</p>
+      <p style="color:var(--mute);margin-top:14px;font-size:17px;max-width:560px">Put
+      your own numbers in. This is the part that actually costs money.</p>
+      <small class="cite">Median caregiver turnover across US home care runs about 75%
+      — Activated Insights (formerly Home Care Pulse), 2025 Benchmarking Report.</small>
     </div>
-    <div class="stage">
-      <img class="floaty" src="img/bolt.png" alt="" width="58" style="--tilt:-8deg;top:-24px;left:-46px">
-      <img class="floaty" src="img/speech.png" alt="" width="54" style="--tilt:6deg;top:120px;right:-52px;animation-delay:.8s">
-      <img class="floaty" src="img/calendar.png" alt="" width="60" style="--tilt:-5deg;bottom:60px;left:-56px;animation-delay:1.5s">
-      <div class="phone" aria-hidden="true">
-        <div class="phone-screen">
-          <div class="phone-top">
-            <div class="avatar">S</div>
-            <div><b>Sunrise Home Care</b><small>demo conversation</small></div>
-          </div>
-          <div class="thread" id="thread"></div>
-        </div>
+    <div class="calc reveal">
+      <div class="calc-row">
+        <label for="c-clients">Clients you turned away last month because you couldn't staff them</label>
+        <input id="c-clients" type="number" min="0" max="99" step="1" value="1" inputmode="numeric">
       </div>
+      <div class="calc-row">
+        <label for="c-rate">What one client bills you in a month, on average ($)</label>
+        <input id="c-rate" type="number" min="0" max="99999" step="100" value="5000" inputmode="numeric">
+      </div>
+      <div class="calc-out">
+        <small>Revenue you declined, annualized</small>
+        <b id="c-out">$60,000<i>/yr</i></b>
+      </div>
+      <p class="calc-note" id="c-note">One filled caregiver seat pays for Ephoria roughly
+      240 times over in the first year.</p>
     </div>
   </div>
 </section>
 
 <div class="money">
   <div class="wrap money-grid">
-    <div class="mcard reveal"><img src="img/money.png" alt="">
-      <div><b>$5,000<i>+</i></b><p>average monthly revenue in every client you decline for lack of staff</p></div></div>
-    <div class="mcard reveal"><img src="img/chart.png" alt="">
-      <div><b>42<i>%</i></b><p>of booked interviews never show up. We remind them until they walk in.</p></div></div>
     <div class="mcard reveal"><img src="img/bolt.png" alt="">
-      <div><b>60<i>s</i></b><p>until your applicants get a text back. The first agency to answer wins.</p></div></div>
+      <div><b>60<i>s</i></b><p>from application to first text, 8am&ndash;9pm local. Overnight applicants get theirs at 8am.</p></div></div>
+    <div class="mcard reveal"><img src="img/speech.png" alt="">
+      <div><b>6<i> max</i></b><p>screening questions, one at a time. Your questions, your bar &mdash; not a personality quiz.</p></div></div>
+    <div class="mcard reveal"><img src="img/hourglass.png" alt="">
+      <div><b>2<i> then stop</i></b><p>follow-ups if they go quiet, over 48 hours. Then it leaves them alone. Permanently.</p></div></div>
   </div>
+  <div class="wrap money-foot">Every number on this strip is a hard limit written into the software, not a target.</div>
 </div>
 
 <section id="how">
@@ -259,6 +348,8 @@ footer a:hover{color:var(--blue)}
     <div class="sec-head reveal" style="margin-bottom:0">
       <p class="label">How it works</p>
       <h2>Hiring runs itself, <mark>while you run the agency.</mark></h2>
+      <p>It plugs into wherever your applicants already come from. You keep posting jobs
+      exactly the way you do today.</p>
     </div>
     <div class="flow reveal">
       <div class="fnode">
@@ -282,38 +373,82 @@ footer a:hover{color:var(--blue)}
   </div>
 </section>
 
-<section class="ruleband">
-  <div class="wrap split">
-    <div class="sec-head reveal" style="margin-bottom:0">
-      <h2>Rules it <mark>never breaks.</mark></h2>
+<section id="demo" class="band-sky">
+  <div class="wrap">
+    <div class="sec-head reveal" style="max-width:720px">
+      <p class="label">Try it yourself — no signup</p>
+      <h2>Answer like a caregiver would. <mark>Then try to break it.</mark></h2>
+      <p>This is the real screening logic, running in your browser. Type anything —
+      be vague, answer out of order, ask it a question, tell it you take the bus,
+      ask for a human. Watch what the agency sees fill in on the right.</p>
     </div>
-    <div class="rules reveal">
-      <div class="rule"><img src="img/handshake.png" alt=""><span>It never pretends to be human.</span></div>
-      <div class="rule"><img src="img/speech.png" alt=""><span>It says what it needs to. Nothing more.</span></div>
-      <div class="rule"><img src="img/hourglass.png" alt=""><span>It never lets a booked interview go quiet.</span></div>
-      <div class="rule"><img src="img/moon.png" alt=""><span>Civilized hours for applicants. On duty 24/7 for you.</span></div>
+    <div class="demo-grid">
+      <div class="reveal">
+        <div class="phone demo-phone">
+          <div class="phone-screen">
+            <div class="phone-top">
+              <div class="avatar">S</div>
+              <div><b>Sunrise Home Care</b><small id="d-status">automated screening</small></div>
+            </div>
+            <div class="thread" id="d-thread" role="log" aria-live="polite" aria-label="Screening conversation"></div>
+            <form class="composer" id="d-form">
+              <label for="d-input" class="skip">Your reply</label>
+              <input id="d-input" autocomplete="off" placeholder="Type your reply…" maxlength="200">
+              <button type="submit" id="d-send" aria-label="Send reply">↑</button>
+            </form>
+          </div>
+        </div>
+        <div class="chips" id="d-chips">
+          <button class="chip" type="button">weekdays and some Saturdays</button>
+          <button class="chip" type="button">I take the bus</button>
+          <button class="chip" type="button">how much does it pay?</button>
+          <button class="chip" type="button">can I talk to a real person?</button>
+          <button class="chip" type="button">banana</button>
+          <button class="chip" type="button">STOP</button>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="op">
+          <div class="op-head">
+            <div><b>What Sunrise sees</b><small>Applicant record · updates live</small></div>
+            <span class="pill" id="op-pill">Screening</span>
+          </div>
+          <div class="op-row"><span>Source</span><em>Website demo</em></div>
+          <div class="op-row"><span>Availability</span><em class="empty" data-k="availability">—</em></div>
+          <div class="op-row"><span>Transportation</span><em class="empty" data-k="transport">—</em></div>
+          <div class="op-row"><span>Certification</span><em class="empty" data-k="certification">—</em></div>
+          <div class="op-row"><span>Experience</span><em class="empty" data-k="experience">—</em></div>
+          <div class="op-row"><span>Can start</span><em class="empty" data-k="start_date">—</em></div>
+          <div class="op-row"><span>Hours/week</span><em class="empty" data-k="hours">—</em></div>
+          <div class="op-row"><span>Preferred call time</span><em class="empty" data-k="callback">—</em></div>
+          <div class="op-foot hide" id="op-foot"></div>
+        </div>
+        <p style="font-size:13px;color:var(--mute);margin-top:16px;line-height:1.5">
+          This runs the deterministic parser — the same one production falls back to
+          when the language model is unreachable. The live version adds the model on
+          top for genuinely messy replies, and books into your real calendar.
+          <button id="d-reset" class="chip" style="margin-left:4px">Start over</button>
+        </p>
+      </div>
     </div>
   </div>
 </section>
 
-<section id="demo" class="band-sky">
-  <div class="wrap demo-grid">
-    <div class="reveal">
-      <p class="label">Try it yourself</p>
-      <h2>Apply like a <mark>caregiver</mark> would.</h2>
-      <p style="color:var(--mute);margin-top:14px;max-width:420px">Put your own number in.
-        Feel how fast your applicants would hear back.</p>
+<section class="ruleband">
+  <div class="wrap split">
+    <div class="sec-head reveal" style="margin-bottom:0">
+      <h2>Rules it <mark>never breaks.</mark></h2>
+      <p>Your name is on every message it sends. These are not settings — they are
+      enforced in the software, and you cannot turn them off. Neither can we.</p>
     </div>
-    <form id="intake" class="reveal">
-      <div style="display:grid;gap:14px">
-        <input required name="name" placeholder="Your name" autocomplete="name">
-        <input required name="phone" type="tel" placeholder="Mobile number" autocomplete="tel">
-        <button type="submit" class="btn btn-blue">Text me in 60 seconds</button>
-      </div>
-      <p class="fine">By submitting, you agree to receive text messages about this demo
-      application. Message and data rates may apply.</p>
-      <p id="form-note"></p>
-    </form>
+    <div class="rules reveal">
+      <div class="rule"><img src="img/handshake.png" alt=""><span>It says it's automated, in the first message.</span></div>
+      <div class="rule"><img src="img/speech.png" alt=""><span>It answers no question it isn't sure of. It hands you the ones it can't.</span></div>
+      <div class="rule"><img src="img/stop.png" alt=""><span>STOP means stopped. Instantly, permanently, no last word.</span></div>
+      <div class="rule"><img src="img/moon.png" alt=""><span>Nothing sends before 8am or after 9pm, their time.</span></div>
+      <div class="rule"><img src="img/hourglass.png" alt=""><span>It never lets a booked interview go quiet.</span></div>
+    </div>
   </div>
 </section>
 
@@ -323,11 +458,27 @@ footer a:hover{color:var(--blue)}
       <div>
         <p class="label">Pricing</p>
         <p class="big" style="margin-top:12px"><mark>$49</mark> to start. <mark>$249</mark> per hire. That's it.</p>
-        <p style="font-size:16px;margin:22px 0 28px;max-width:470px">The $49 books your
+        <p style="font-size:16px;margin:22px 0 6px;max-width:470px">The $49 books your
         pilot after a 15-minute fit call, and it is <b>fully refundable</b>: walk away at
-        any point and it comes back, no questions. The $249 is billed only when a caregiver
-        works their first shift. Everything in between is $0.</p>
-        <a class="btn btn-blue" href="mailto:kariwalbadal@gmail.com?subject=Ephoria%20fit%20call">Book a fit call</a>
+        any point and it comes back, no questions. The $249 is billed only when a
+        caregiver actually works their first shift. Everything in between &mdash; every
+        text, every screen, every no-show chase &mdash; is $0.</p>
+        <ul class="offer-points">
+          <li>No monthly fee, no seat licence, no minimum</li>
+          <li>Nothing billed for applicants who ghost, fail the screen, or never start</li>
+          <li>Cancel by replying to any email. The $49 comes back.</li>
+        </ul>
+        <div class="custom-note">
+          <b>Most agencies need something built for them.</b>
+          Missed calls that never get returned, a scheduler drowning in voicemail, an intake
+          step nobody else has, a second language, your own screening bar. None of that is an
+          edge case &mdash; it's how you run. We scope the custom pieces on the fit call and
+          quote them for your agency. <b style="display:inline;font-size:inherit">Recommended,
+          not upsold:</b> the agencies that get the most out of this are the ones who had us
+          fit it to their workflow instead of the other way round.
+        </div>
+        <a class="btn btn-blue" href="mailto:kariwalbadal@gmail.com?subject=Ephoria%20fit%20call&amp;body=Which%20agency%3A%20%0AWhere%3A%20%0AOpen%20roles%20right%20now%3A%20%0AWhat%27s%20breaking%20in%20hiring%20right%20now%3A%20%0ABest%20time%20for%2015%20minutes%3A%20">Book a fit call</a>
+        <p class="ctanote">Opens an email. Reply with your agency name and I'll send times back the same day.</p>
       </div>
       <div class="offer-img">
         <img src="img/warmth.jpg" alt="A caregiver preparing a warm drink for a senior">
@@ -336,30 +487,111 @@ footer a:hover{color:var(--blue)}
   </div>
 </section>
 
+<section class="faq">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2>The questions you're <mark>actually</mark> asking.</h2>
+    </div>
+    <div class="reveal">
+      <details>
+        <summary>Turnover is 75%. Do I pay $249 again every time someone quits?</summary>
+        <p>Yes — $249 each time a caregiver starts a first shift. That's exactly why the
+        price is per-hire and not per-month: <b>in the months you hire nobody, you pay
+        nothing.</b> A monthly tool bills you through your quiet season and through every
+        candidate who ghosts. Compare it to what you already spend to fill one seat —
+        job board spend, the hours your scheduler loses to voicemail, and the client
+        revenue waiting on that hire.</p>
+      </details>
+      <details>
+        <summary>What do I actually see? Do I have to learn new software?</summary>
+        <p>No. You get the record on the right of the demo above — name, their answers to
+        your questions, the full transcript, and the booked time — delivered the way you
+        already work: email, text, or a shared sheet. There is no dashboard you have to
+        log into, and nothing changes about how you post jobs.</p>
+      </details>
+      <details>
+        <summary>Whose phone number does it text from?</summary>
+        <p>A number we register and operate for your agency, carrier-approved for
+        business messaging. Replies route to the screener; anything it can't handle is
+        handed to you with the whole conversation attached. You never have to register
+        anything with a carrier yourself — that process is slow and unpleasant, and
+        it's the part we absorb.</p>
+      </details>
+      <details>
+        <summary>Does it work with Indeed / my ATS / my careers page?</summary>
+        <p>Yes. Applicants reach the screener from wherever they already come from —
+        Indeed, your website form, a spreadsheet, or a forwarded email. We build the
+        connector for your setup during the pilot. You keep posting jobs exactly the way
+        you do today.</p>
+      </details>
+      <details>
+        <summary>What happens when it doesn't understand someone?</summary>
+        <p>It stops guessing. After two unclear replies — or the moment anyone asks for a
+        person, sounds distressed, or asks something it wasn't given an answer for — it
+        stops screening, tells them a human will follow up, and flags the conversation to
+        you. <b>It never invents an answer about pay, hours, or clients.</b> Try it in the
+        demo above: type "banana" twice, or ask for a real person.</p>
+      </details>
+      <details>
+        <summary>What about applicants who call instead of texting? We miss a lot of calls.</summary>
+        <p>That's the same leak in a different pipe, and it's usually the bigger one — a missed
+        call at 4pm on a Friday is gone. We can put a number in front of it that picks up every
+        time: it catches the call you couldn't answer, texts them straight back, and runs the
+        same screening conversation you saw above. If they'd rather speak to someone, it takes
+        the reason and a time and hands it to you. <b>This is a custom piece, not a checkbox</b>
+        — how calls should be caught depends on your phone setup, so we scope it on the fit
+        call and quote it for your agency.</p>
+      </details>
+      <details>
+        <summary>My agency does things differently. Can it be built around us?</summary>
+        <p>That's the normal case, not the exception. Different screening bar, an extra
+        compliance question, Spanish-speaking applicants, a scheduler who wants everything in
+        one morning email, a referral source that needs its own flow — all of it is buildable,
+        and we'd rather fit the software to how you already work than ask your team to change.
+        Tell us what's awkward about your setup on the fit call; custom scope is quoted per
+        agency on top of the pricing above.</p>
+      </details>
+      <details>
+        <summary>Is this a bot pretending to be a person?</summary>
+        <p>No, and it never will be. The first message says it's the automated scheduling
+        assistant for your agency. Applicants who ask are told plainly. We think the
+        agencies that pretend otherwise are going to regret it, and we'd rather not be
+        one of them.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
 <footer>
   <div class="wrap">
-    <a class="logo" href="#" style="gap:8px"><svg viewBox="0 0 48 48" style="width:24px;height:24px" aria-hidden="true"><path d="M8 6h32a6 6 0 0 1 6 6v18a6 6 0 0 1-6 6H22l-9 8v-8H8a6 6 0 0 1-6-6V12a6 6 0 0 1 6-6z" fill="#2B5BFF"/><path d="M27 10 15 26h7l-2 12 12-16h-7l2-12z" fill="#FFC531"/></svg><b style="font-size:17px">ephoria</b></a>
-    <div>Screened applicants. Full calendars. Caregivers who show up. · <a href="mailto:kariwalbadal@gmail.com">kariwalbadal@gmail.com</a></div>
+    <a class="logo" href="#" style="gap:8px" aria-label="Ephoria home"><svg viewBox="0 0 48 48" style="width:24px;height:24px" aria-hidden="true"><path d="M8 6h32a6 6 0 0 1 6 6v18a6 6 0 0 1-6 6H22l-9 8v-8H8a6 6 0 0 1-6-6V12a6 6 0 0 1 6-6z" fill="#2B5BFF"/><path d="M27 10 15 26h7l-2 12 12-16h-7l2-12z" fill="#FFC531"/></svg><b style="font-size:17px">ephoria</b></a>
+    <div class="foot-links">
+      <a href="#demo">Demo</a>
+      <a href="#offer">Pricing</a>
+      <a href="privacy.html">Privacy &amp; SMS terms</a>
+      <a href="mailto:kariwalbadal@gmail.com">kariwalbadal@gmail.com</a>
+    </div>
   </div>
 </footer>
 
 <script>
 document.documentElement.classList.add("js");
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-/* SMS demo loop */
+/* ---------- hero: scripted preview (short, so a full loop is watchable) ---------- */
 const script = [
   {t:"sys", x:"Applied on Indeed, 40 seconds ago"},
-  {t:"out", x:"Hi Maria, this is the scheduling assistant for Sunrise Home Care. We just got your application. Mind a few quick questions? Reply STOP to opt out."},
+  {t:"out", x:"Hi Maria — this is the automated scheduling assistant for Sunrise Home Care. We just got your application. A few quick questions? Reply STOP to opt out."},
   {t:"in",  x:"ok sure"},
-  {t:"out", x:"Great. Which days can you usually work? Weekdays, weekends, or both?"},
+  {t:"out", x:"Which days can you usually work? Weekdays, weekends, or both?"},
   {t:"in",  x:"weekdays mostly, some saturdays"},
   {t:"out", x:"Do you have reliable transportation to reach clients?"},
   {t:"in",  x:"yes i have a car"},
-  {t:"out", x:"Are you a CNA, an HHA, or neither? Neither is fine."},
-  {t:"in",  x:"CNA, 3 yrs experience"},
-  {t:"out", x:"That's exactly what they're looking for. Three interview slots are open: Tue 10:00, Tue 2:00, Wed 9:00. Which suits you?"},
-  {t:"in",  x:"tue 2pm works"},
-  {t:"out", x:"Booked: Tuesday, 2:00 pm. I'll text you the address and what to bring. See you there, Maria."},
+  {t:"out", x:"You sound like a great fit. Three interview slots are open: 1) Tue 10:00  2) Tue 2:00  3) Wed 9:00. Which works?"},
+  {t:"in",  x:"2"},
+  {t:"out", x:"Booked: Tuesday, 2:00 pm. I'll text the address and what to bring. See you there, Maria."},
 ];
 const thread = document.getElementById("thread");
 let i = 0;
@@ -390,10 +622,10 @@ function step(){
     return;
   }
   const m = script[i++];
-  if (m.t === "out") typing(()=>{ addMsg(m); later(step, 1500 + Math.random()*700); });
-  else { addMsg(m); later(step, m.t==="sys" ? 900 : 1600 + Math.random()*700); }
+  if (m.t === "out") typing(()=>{ addMsg(m); later(step, 1400 + Math.random()*600); });
+  else { addMsg(m); later(step, m.t==="sys" ? 900 : 1500 + Math.random()*600); }
 }
-if (matchMedia("(prefers-reduced-motion: reduce)").matches){
+if (REDUCED){
   script.forEach(addMsg);
 } else {
   new IntersectionObserver(es=>{
@@ -403,31 +635,348 @@ if (matchMedia("(prefers-reduced-motion: reduce)").matches){
   step();
 }
 
-/* scroll reveal + failsafe */
+/* ---------- cost calculator ---------- */
+const cC = document.getElementById("c-clients"), cR = document.getElementById("c-rate"),
+      cO = document.getElementById("c-out"),     cN = document.getElementById("c-note");
+function money(n){ return "$" + Math.round(n).toLocaleString("en-US"); }
+function calc(){
+  const clients = Math.max(0, Math.min(99, +cC.value || 0));
+  const rate    = Math.max(0, Math.min(99999, +cR.value || 0));
+  const year = clients * rate * 12;
+  cO.innerHTML = money(year) + "<i>/yr</i>";
+  cN.textContent = year <= 0
+    ? "Change the numbers above to see what an unstaffed client costs over a year."
+    : "One filled caregiver seat pays for Ephoria roughly " +
+      Math.max(1, Math.round(year / 249)).toLocaleString("en-US") +
+      " times over in the first year, at $249 per hire.";
+}
+cC.addEventListener("input", calc); cR.addEventListener("input", calc); calc();
+
+/* ---------- interactive screener ----------
+   Faithful port of sms/engine.py + the deterministic parser in sms/llm.py.
+   Same six questions, same qualification gate, same escalation rules — so what
+   a visitor experiences here is what production does when the LLM is offline. */
+const QUESTIONS = [
+  {key:"availability",  text:"Which days can you usually work? Weekdays, weekends, or both?"},
+  {key:"transport",     text:"Do you have reliable transportation to reach clients?"},
+  {key:"certification", text:"Are you a CNA, an HHA, or neither? Neither is fine."},
+  {key:"experience",    text:"How many months or years of caregiving experience do you have? Rough is fine."},
+  {key:"start_date",    text:"How soon could you start?"},
+  {key:"hours",         text:"About how many hours a week are you looking for?"},
+];
+const STOP_RE     = /^\s*(stop|unsubscribe|cancel|quit|end)\b/i;
+const HUMAN_RE    = /\b(human|real person|someone real|talk to a person|call me|speak to)\b/i;
+const DISTRESS_RE = /\b(emergency|urgent help|911|hurt|abuse|scared|danger)\b/i;
+const SLOT_RE     = /\b(1|2|3|one|two|three|first|second|third)\b/i;
+const YES_RE      = /\b(yes|yeah|yep|sure|ok|okay|confirm|see you)\b/i;
+const CHECKS = {
+  availability:  /week ?e?nds?|weekd\w*|both|\b(mon|tue|wed|thu|fri|sat|sun)day?s?\b|any ?day|full ?time|part ?time|morning|evening|night/i,
+  transport:     /\b(yes|yeah|yep|no|nope|car|bus|drive|i do|i don|hav)\b/i,
+  certification: /\b(cna|hha|neither|none|no cert|not certified|certif\w*)\b/i,
+  experience:    /\d+\s*(y\w*|mo\w*)|no experience|new to|\d+/i,
+  start_date:    /immediately|asap|today|tomorrow|ne?xt\s*we+k|monday|two weeks|soon|\d+/i,
+  hours:         /\d+|full ?time|part ?time/i,
+};
+function heuristic(key, reply){
+  const r = reply.trim().toLowerCase();
+  if (HUMAN_RE.test(r)) return {intent:"call_me", value:""};
+  if (r.endsWith("?") || /^(what|why|how much|when|where|who)\b/.test(r))
+    return {intent:"question_back", value:""};
+  const pat = CHECKS[key];
+  if (pat && pat.test(r)) return {intent:"answer", value:reply.trim().slice(0,120)};
+  return {intent:"confused", value:""};
+}
+/* Transport must be affirmative, availability must be present. Negations win
+   unless the reply also says yes — "i don't have a car" must not qualify.
+   These three regexes are kept identical to sms/questions.py. */
+const NEG_RE = /\b(no|nope|don'?t|do ?not|can'?t|cannot|bus|subway|walk|bike|ride|lift|uber)\b/i;
+const YES2_RE = /\b(yes|yeah|yep|yup)\b/i;
+const POS_RE = /\b(yes|yeah|yep|yup|car|have|has|own|drive|driving|driver|vehicle|truck)\b/i;
+function qualifies(a){
+  const t = a.transport || "";
+  if (!a.availability) return false;
+  if (NEG_RE.test(t) && !YES2_RE.test(t)) return false;
+  return POS_RE.test(t);
+}
+function demoSlots(){
+  const out = [], d = new Date();
+  while (out.length < 3){
+    d.setDate(d.getDate() + 1);
+    if (d.getDay() >= 1 && d.getDay() <= 5){
+      out.push(new Date(d.getFullYear(), d.getMonth(), d.getDate(), 10, 0));
+      if (out.length < 3) out.push(new Date(d.getFullYear(), d.getMonth(), d.getDate(), 14, 0));
+    }
+  }
+  return out.slice(0,3);
+}
+function fmtSlot(dt){
+  return dt.toLocaleDateString("en-US",{weekday:"long",month:"short",day:"numeric"}) + ", " +
+         dt.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
+}
+
+const dThread = document.getElementById("d-thread"), dForm = document.getElementById("d-form"),
+      dInput = document.getElementById("d-input"), dSend = document.getElementById("d-send"),
+      dStatus = document.getElementById("d-status"), opPill = document.getElementById("op-pill"),
+      opFoot = document.getElementById("op-foot"), dChips = document.getElementById("d-chips");
+let D, dBusy = false, dGen = 0;   // dGen invalidates in-flight replies across a reset
+
+/* Batched into a frame: writing scrollTop straight after appendChild forces a
+   synchronous reflow of the thread on every single message. */
+let dScrollQueued = false;
+function dScroll(){
+  if (dScrollQueued) return;
+  dScrollQueued = true;
+  requestAnimationFrame(()=>{ dScrollQueued = false; dThread.scrollTop = dThread.scrollHeight; });
+}
+function dAdd(kind, text){
+  const el = document.createElement("div");
+  el.className = "msg " + kind;
+  el.textContent = text;
+  dThread.appendChild(el);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add("show")));
+  dScroll();
+  return el;
+}
+/* Agent replies land after a short beat so the exchange reads as a conversation. */
+function dAgent(text){
+  if (REDUCED){ dAdd("out", text); return; }
+  dBusy = true; dSend.disabled = true;
+  const gen = dGen;
+  const t = document.createElement("div");
+  t.className = "msg out show";
+  t.innerHTML = '<span class="typing"><i></i><i></i><i></i></span>';
+  dThread.appendChild(t);
+  dScroll();
+  setTimeout(()=>{
+    t.remove();
+    if (gen !== dGen) return;   // conversation was reset mid-reply; drop this one
+    dAdd("out", text);
+    dBusy = false;
+    if (D.status === "screening" || D.status === "qualified" || D.status === "scheduled")
+      dSend.disabled = false;
+  }, 620 + Math.random()*420);
+}
+/* Deferred UI work that must not fire into a conversation that was reset. */
+function dLater(fn, ms){ const gen = dGen; setTimeout(()=>{ if (gen === dGen) fn(); }, ms); }
+function setPill(text, cls){ opPill.textContent = text; opPill.className = "pill" + (cls ? " " + cls : ""); }
+function setFoot(text, cls){
+  opFoot.textContent = text;
+  opFoot.className = "op-foot" + (cls ? " " + cls : "") + (text ? "" : " hide");
+}
+function opRender(){
+  document.querySelectorAll("[data-k]").forEach(el=>{
+    const v = D.answers[el.dataset.k];
+    el.textContent = v || "—";
+    el.classList.toggle("empty", !v);
+  });
+}
+function dEnd(statusText){
+  dStatus.textContent = statusText;
+  dSend.disabled = true; dInput.disabled = true;
+  dInput.placeholder = "Conversation ended — press Start over";
+  dChips.querySelectorAll(".chip").forEach(c=>c.disabled = true);
+}
+
+function dReset(){
+  dGen++; dBusy = false;
+  D = {status:"screening", qIndex:0, answers:{}, confused:0, qback:0, callbackTries:0, slots:[]};
+  dThread.innerHTML = "";
+  dInput.disabled = false; dSend.disabled = false; dInput.value = "";
+  dInput.placeholder = "Type your reply…";
+  dStatus.textContent = "automated screening";
+  dChips.querySelectorAll(".chip").forEach(c=>c.disabled = false);
+  setPill("Screening", ""); setFoot("");
+  opRender();
+  dAdd("sys", "Applied on Indeed, 40 seconds ago");
+  dAdd("out", "Hi — this is the automated scheduling assistant for Sunrise Home Care. " +
+              "We just got your application and would love to move fast. A few quick " +
+              "questions. " + QUESTIONS[0].text + " Reply STOP to opt out.")
+    .classList.add("show");
+}
+
+/* A handoff is worth more to the agency with a time attached, so anything that
+   ends in "someone will call you" collects a preferred window first. Distress is
+   the exception — that one hands over immediately without another question. */
+function escalate(msg, askTime){
+  setPill("Needs a human", "flag");
+  if (!askTime){
+    D.status = "flagged";
+    dAgent(msg);
+    setFoot("Flagged for follow-up. The full transcript is handed to Sunrise — the screener stops here rather than guess.", "flagged");
+    dLater(()=>dEnd("handed to a human"), 700);
+    return;
+  }
+  D.status = "callback";
+  D.callbackTries = 0;
+  dAgent(msg + " When's a good time to reach you? Morning, afternoon or evening is enough — or say anytime.");
+  setFoot("Flagged for a callback. The screener is collecting a preferred time before it hands the transcript over.", "flagged");
+}
+
+const ANYTIME_RE  = /\b(any ?time|when ?ever|no preference|does ?n'?o?t matter|up to you|either|whatever|doesn'?t matter|no)\b/i;
+/* Plurals and full day names both matter: real replies say "mornings" and
+   "Monday", neither of which a bare \bmorning\b / \bmon\b would catch.
+   Kept identical to TIMEPREF in sms/engine.py. */
+const TIMEPREF_RE = /\b(mornings?|afternoons?|evenings?|nights?|noon|tonight|tomorrow|today|asap|now|early|late|lunch|weekdays?|weekends?|(mon|tues?|wed(nes)?|thur?s?|fri|sat(ur)?|sun)(day)?s?|\d{1,2}\s*[:.]?\d{0,2}\s*(am|pm)|\d{1,2}:\d{2}|after\s*\d|before\s*\d)\b/i;
+
+function callbackReply(body){
+  // A stated time always wins over an "anytime" token appearing in the sentence.
+  if (TIMEPREF_RE.test(body)){
+    const pref = body.trim().slice(0, 60);
+    D.answers.callback = pref;
+    D.status = "flagged";
+    opRender();
+    dAgent('Got it, noted: "' + pref + '". Someone from Sunrise Home Care will call you then, ' +
+           "and they'll have everything you've told me already.");
+    setFoot('Callback requested: "' + pref + '". Handed to Sunrise with the full transcript.', "flagged");
+    dLater(()=>dEnd("callback time noted"), 900);
+    return;
+  }
+  if (ANYTIME_RE.test(body) || D.callbackTries >= 1){
+    const s = demoSlots()[0];
+    D.answers.callback = fmtSlot(s) + " (suggested)";
+    D.status = "flagged";
+    opRender();
+    dAgent("No problem — I'll put you down for " + fmtSlot(s) + ". If that doesn't suit, " +
+           "text back any time that does and we'll work around you.");
+    setFoot("No preference given, so the screener proposed " + fmtSlot(s) + ". Handed to Sunrise with the full transcript.", "flagged");
+    dLater(()=>dEnd("callback time proposed"), 900);
+    return;
+  }
+  D.callbackTries += 1;
+  dAgent("Sorry — roughly when suits you? Morning, afternoon or evening all work, or just say anytime.");
+}
+
+function dReply(body){
+  // R3: STOP is checked before anything else, halts permanently, no reply.
+  if (STOP_RE.test(body)){
+    D.status = "opted_out";
+    dAdd("sys", "Opted out. No further message will ever be sent to this number — and no reply was sent to this one.");
+    setPill("Opted out", "no");
+    setFoot("Permanently opted out. Every future send checks this before it goes.", "");
+    dEnd("opted out");
+    return;
+  }
+  if (DISTRESS_RE.test(body)) return escalate("Someone from Sunrise Home Care will call you as soon as possible.", false);
+
+  if (D.status === "callback")       return callbackReply(body);
+  if (D.status === "screening")      return screeningReply(body);
+  if (D.status === "qualified")      return slotReply(body);
+  if (D.status === "scheduled" && YES_RE.test(body)){
+    D.status = "confirmed";
+    dAgent("You're confirmed. See you there!");
+    setPill("Confirmed", "ok");
+    dLater(()=>dEnd("interview confirmed"), 900);
+  }
+}
+
+function screeningReply(body){
+  const q = QUESTIONS[Math.min(D.qIndex, QUESTIONS.length - 1)];
+  const out = heuristic(q.key, body);
+
+  if (out.intent === "call_me")
+    return escalate("No problem — someone from Sunrise Home Care will call you.", true);
+
+  if (out.intent === "question_back"){
+    // Deflect once. A second question means the screener genuinely doesn't have
+    // what they need, so it stops stalling and gets them a person.
+    D.qback = (D.qback || 0) + 1;
+    if (D.qback >= 2)
+      return escalate("I don't have that detail on hand and I'd rather not guess at it. " +
+                      "Someone from Sunrise Home Care can call and answer properly.", true);
+    return dAgent("Good question, and Sunrise Home Care can answer it at the interview. For now: " + q.text);
+  }
+
+  if (out.intent === "confused"){
+    // Real applicants answer out of order — check every still-open question first.
+    for (const other of QUESTIONS){
+      if (D.answers[other.key] || other.key === q.key) continue;
+      const h = heuristic(other.key, body);
+      if (h.intent === "answer" && body.trim().split(/\s+/).length > 3){
+        D.answers[other.key] = h.value; opRender();
+        return dAgent("Got it, noted. And " + q.text[0].toLowerCase() + q.text.slice(1));
+      }
+    }
+    D.confused += 1;
+    if (D.confused >= 2)
+      return escalate("Let's make this easy — someone from Sunrise Home Care will call you instead.", true);
+    return dAgent("Sorry, let me ask that better. " + q.text);
+  }
+
+  // answer: store it, then see if the same message answers later questions too
+  D.answers[q.key] = out.value || body.trim().slice(0,120);
+  for (const later of QUESTIONS.slice(D.qIndex + 1)){
+    if (D.answers[later.key]) continue;
+    const h = heuristic(later.key, body);
+    if (h.intent === "answer" && body.trim().split(/\s+/).length > 3) D.answers[later.key] = h.value;
+  }
+  D.confused = 0;
+  let next = D.qIndex + 1;
+  while (next < QUESTIONS.length && D.answers[QUESTIONS[next].key]) next++;
+  opRender();
+
+  if (next >= QUESTIONS.length) return finishScreening();
+  D.qIndex = next;
+  dAgent(QUESTIONS[next].text);
+}
+
+function finishScreening(){
+  if (qualifies(D.answers)){
+    D.status = "qualified";
+    D.slots = demoSlots();
+    setPill("Qualified", "ok");
+    setFoot("Passed your bar. Offered three interview slots — no one at Sunrise has touched this yet.", "book");
+    dAgent("You sound like a great fit. Three interview slots are open: 1) " +
+      fmtSlot(D.slots[0]) + "  2) " + fmtSlot(D.slots[1]) + "  3) " + fmtSlot(D.slots[2]) +
+      ". Which works for you?");
+  } else {
+    D.status = "disqualified";
+    setPill("Not a fit", "no");
+    setFoot("Screened out on your rule: this role requires reliable transportation. No interview slot was offered, and no one at Sunrise spent a minute on it.", "");
+    dAgent("Thanks for your time. Sunrise Home Care needs reliable transportation for " +
+           "this role, so we can't move forward right now. If that changes, text us back any time.");
+    dLater(()=>dEnd("screened out"), 900);
+  }
+}
+
+function slotReply(body){
+  const m = SLOT_RE.exec(body);
+  const idx = m ? ({"1":0,"one":0,"first":0,"2":1,"two":1,"second":1,"3":2,"three":2,"third":2})[m[1].toLowerCase()] : undefined;
+  if (idx === undefined || idx >= D.slots.length)
+    return dAgent("Just reply 1, 2, or 3 for the slot that works.");
+  const iv = D.slots[idx];
+  D.status = "scheduled";
+  setPill("Interview booked", "ok");
+  setFoot("Booked: " + fmtSlot(iv) + ". Reminder goes out the day before, and again if they go quiet.", "book");
+  dAgent("Booked: " + fmtSlot(iv) + ". Sunrise Home Care will text you the address and " +
+         "what to bring before the interview. See you then!");
+}
+
+dForm.addEventListener("submit", e=>{
+  e.preventDefault();
+  const body = dInput.value.trim();
+  if (!body || dBusy || dInput.disabled) return;
+  dInput.value = "";
+  dAdd("in", body);
+  dReply(body);
+});
+dChips.addEventListener("click", e=>{
+  const chip = e.target.closest(".chip");
+  if (!chip || chip.disabled || dBusy || dInput.disabled) return;
+  dInput.value = chip.textContent;
+  dForm.requestSubmit();
+});
+document.getElementById("d-reset").addEventListener("click", ()=>{
+  dReset();
+  document.getElementById("demo").scrollIntoView({behavior:"smooth", block:"start"});
+});
+dReset();
+
+/* ---------- scroll reveal + failsafe ---------- */
 const io = new IntersectionObserver(es=>es.forEach(e=>{
   if(e.isIntersecting){ e.target.classList.add("on"); io.unobserve(e.target); }
 }),{threshold:.15});
 document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
 setTimeout(()=>document.querySelectorAll(".reveal").forEach(el=>el.classList.add("on")), 3000);
-
-/* intake form: STEP 5 webhook (empty until service deploys) */
-const WEBHOOK_URL = "";
-document.getElementById("intake").addEventListener("submit", async (e)=>{
-  e.preventDefault();
-  const note = document.getElementById("form-note");
-  note.style.display = "block";
-  if (!WEBHOOK_URL){
-    note.textContent = "The live demo line isn't connected yet. Email us and we'll show you directly.";
-    return;
-  }
-  const data = Object.fromEntries(new FormData(e.target));
-  try{
-    const r = await fetch(WEBHOOK_URL,{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({...data, source:"form"})});
-    note.textContent = r.ok ? "Done. Check your phone, a text is on its way."
-                            : "Something went wrong. Email us instead.";
-  }catch{ note.textContent = "Something went wrong. Email us instead."; }
-});
 </script>
 
 </body>
